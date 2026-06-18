@@ -37,6 +37,7 @@
         <%= form.number_field :verification_timeout, class: "w-full rounded-lg border-gray-300 shadow-sm py-2 px-3" %>
       </div>
     </div>
+    <% if GroupConfig.column_names.include?('language') %>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
         <%= form.label :language, t('.labels.language'), class: "block text-sm font-medium text-gray-700 mb-1" %>
@@ -45,6 +46,7 @@
             { include_blank: true }, class: "w-full rounded-lg border-gray-300 shadow-sm py-2 px-3" %>
       </div>
     </div>
+    <% end %>
 
     <hr class="border-gray-200">
 

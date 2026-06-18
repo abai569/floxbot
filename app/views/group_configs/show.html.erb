@@ -15,10 +15,12 @@
           <strong class="block font-medium mb-1"><%= t('.timeout') %>:</strong>
           <%= @group_config.verification_timeout %><%= t('.seconds') %>
         </div>
+        <% if GroupConfig.column_names.include?('language') %>
         <div>
           <strong class="block font-medium mb-1"><%= t('.language') %>:</strong>
           <%= @group_config.language.present? ? @group_config.language.upcase : t('.language_auto') %>
         </div>
+        <% end %>
       </div>
     </div>
 
