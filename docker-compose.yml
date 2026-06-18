@@ -1,5 +1,6 @@
 services:
   app:
+    container_name: floxbot-app
     build: .
     ports:
       - "${PORT:-8060}:80"
@@ -21,10 +22,12 @@ services:
       retries: 3
 
   bot:
+    container_name: floxbot-bot
     build: .
     environment:
       RAILS_ENV: production
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
       DATABASE_URL: sqlite3:///rails/storage/production.sqlite3
       JOB_CONCURRENCY: 3
     volumes:
@@ -37,10 +40,12 @@ services:
     restart: unless-stopped
 
   job:
+    container_name: floxbot-job
     build: .
     environment:
       RAILS_ENV: production
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
       DATABASE_URL: sqlite3:///rails/storage/production.sqlite3
     volumes:
       - production_data:/rails/storage
