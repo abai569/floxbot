@@ -387,6 +387,8 @@ zh:
       del_keyword: "删除关键字触发"
       edit_link: "编辑"
       back_link: "返回"
+      alert_delete_delay: "⚠️ 警告消息自动删除"
+      keyword_delete_delay: "💬 关键字回复自动删除"
     new:
       title: "新增群组配置"
       back_link: "返回"
@@ -413,6 +415,9 @@ zh:
       cleanup: "消息清理"
       del_forward: "删除转发消息"
       del_keyword: "删除关键字触发消息"
+      labels:
+        alert_delete_delay: "警告消息删除延迟（分，0=不删，默认3）"
+        keyword_delete_delay: "关键字回复删除延迟（分，留空=不删）"
 
   keyword_replies:
     index:

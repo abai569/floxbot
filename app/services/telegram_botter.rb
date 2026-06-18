@@ -57,16 +57,14 @@ class TelegramBotter
 
   private
 
-  def delete_alart_message(sent_message)
-    if !sent_message.nil?
-      # Schedule a background job to delete the message
-      # to avoid polluting the group chat
-      delete_message_delay = Rails.application.config.delete_message_delay
-      TelegramBackgroundWorkerJob.set(wait: delete_message_delay.minutes).perform_later(
-        action: PostAction::DELETE_ALERT_MESSAGE,
-        chat_id: sent_message.chat.id,
-        message_id: sent_message.message_id)
-    end
+  def delete_alart_message(sent_message, delay_minutes: nil)
+    return if sent_message.nil?
+    delay = delay_minutes || Rails.application.config.delete_message_delay
+    return if delay.nil? || delay <= 0
+    TelegramBackgroundWorkerJob.set(wait: delay.minutes).perform_later(
+      action: PostAction::DELETE_ALERT_MESSAGE,
+      chat_id: sent_message.chat.id,
+      message_id: sent_message.message_id)
   end
 
   # Determines the appropriate language code for a given message based on a layered approach.
@@ -329,13 +327,7 @@ class TelegramBotter
         end
 
         sent_message = bot.api.send_message(chat_id: message.chat.id, text: response_message, parse_mode: "Markdown")
-        # 5. Schedule a background job to delete the message
-        # to avoid polluting the group chat
-        delete_message_delay = Rails.application.config.delete_message_delay
-        TelegramBackgroundWorkerJob.set(wait: delete_message_delay.minutes).perform_later(
-          action: PostAction::DELETE_ALERT_MESSAGE,
-          chat_id: sent_message.chat.id,
-          message_id: sent_message.message_id)
+        delete_alart_message(sent_message, delay_minutes: group_config_for(message).alert_delete_delay)
       rescue => e
         Rails.logger.error "Error in markspam command: #{e.message}"
         bot.api.send_message(chat_id: message.chat.id, text: I18n.t("telegram_bot.markspam.failure_message"))
@@ -1339,7 +1331,7 @@ class TelegramBotter
   end
 
   def send_keyword_reply(bot, chat_id, keyword_reply)
-    case keyword_reply.reply_type
+    sent = case keyword_reply.reply_type
     when "text"
       bot.api.send_message(chat_id: chat_id, text: keyword_reply.reply_content)
     when "photo"
@@ -1349,6 +1341,8 @@ class TelegramBotter
       bot.api.send_video(chat_id: chat_id, video: keyword_reply.reply_content,
         caption: keyword_reply.reply_text)
     end
+    config = GroupConfig.find_by(group_id: chat_id)
+    delete_alart_message(sent, delay_minutes: config&.keyword_delete_delay)
   rescue => e
     Rails.logger.error "Keyword reply send error: #{e.message}"
   end

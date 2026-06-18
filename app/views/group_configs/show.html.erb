@@ -49,6 +49,20 @@
         <div><strong><%= t('.del_keyword') %>:</strong> <%= check_mark(@group_config.del_keyword?) %></div>
       </div>
     </div>
+
+    <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+      <h2 class="text-xl font-bold mb-4">自动删除</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <strong class="block font-medium mb-1"><%= t('.alert_delete_delay') %>:</strong>
+          <%= @group_config.alert_delete_delay.to_i > 0 ? "#{@group_config.alert_delete_delay} 分钟" : "不删除" %>
+        </div>
+        <div>
+          <strong class="block font-medium mb-1"><%= t('.keyword_delete_delay') %>:</strong>
+          <%= @group_config.keyword_delete_delay.to_i > 0 ? "#{@group_config.keyword_delete_delay} 分钟" : "不删除" %>
+        </div>
+      </div>
+    </div>
   </div>
 
   <%= link_to t('.edit_link'), edit_group_config_path(@group_config), class: "rounded-lg px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
