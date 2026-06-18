@@ -14,7 +14,10 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
         <%= form.label :group_id, class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= form.number_field :group_id, class: "w-full rounded-lg border-gray-300 shadow-sm py-2 px-3" %>
+        <%= form.select :group_id,
+            options_from_collection_for_select(@group_configs, :group_id, ->(g) { "#{g.group_name || '未知'} (#{g.group_id})" }, keyword_reply.group_id),
+            { include_blank: "请选择群组" },
+            class: "w-full rounded-lg border-gray-300 shadow-sm py-2 px-3" %>
       </div>
       <div>
         <%= form.label :keyword, class: "block text-sm font-medium text-gray-700 mb-1" %>

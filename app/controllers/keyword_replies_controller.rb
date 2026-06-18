@@ -31,9 +31,11 @@ class KeywordRepliesController < ApplicationController
 
   def new
     @keyword_reply = KeywordReply.new
+    @group_configs = GroupConfig.all.order(:group_name)
   end
 
   def edit
+    @group_configs = GroupConfig.all.order(:group_name)
   end
 
   def create
