@@ -8,6 +8,7 @@ services:
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
       DATABASE_URL: sqlite3:///rails/storage/production.sqlite3
     volumes:
       - production_data:/rails/storage
