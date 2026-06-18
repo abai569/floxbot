@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FloxBot 安装与升级教程</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0d1117;
+    color: #c9d1d9;
+    line-height: 1.7;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+  h1 { font-size: 2rem; color: #58a6ff; margin-bottom: 8px; }
+  h2 { font-size: 1.5rem; color: #58a6ff; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 1px solid #21262d; }
+  h3 { font-size: 1.15rem; color: #79c0ff; margin: 24px 0 12px; }
+  p { margin: 12px 0; }
+  a { color: #58a6ff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  ul, ol { margin: 12px 0; padding-left: 24px; }
+  li { margin: 6px 0; }
+  .subtitle { color: #8b949e; font-size: 1rem; margin-bottom: 32px; }
+  .toc {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+  }
+  .toc h3 { margin-top: 0; color: #c9d1d9; }
+  .toc ol { margin: 8px 0 0; }
+  .toc a { color: #79c0ff; }
+  .toc a:hover { color: #58a6ff; }
+  .step {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 16px 0;
+  }
+  .step-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #79c0ff;
+    margin-bottom: 12px;
+  }
+  .code-block {
+    position: relative;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    margin: 12px 0;
+    overflow: hidden;
+  }
+  .code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #161b22;
+    padding: 8px 16px;
+    border-bottom: 1px solid #30363d;
+    font-size: 0.85rem;
+    color: #8b949e;
+  }
+  .copy-btn {
+    background: #21262d;
+    color: #c9d1d9;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .copy-btn:hover { background: #30363d; border-color: #8b949e; }
+  .copy-btn.copied { background: #238636; border-color: #2ea043; color: #fff; }
+  pre {
+    padding: 16px;
+    overflow-x: auto;
+    font-family: "SFMono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #c9d1d9;
+    margin: 0;
+    white-space: pre;
+  }
+  code {
+    font-family: "SFMono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace;
+    font-size: 0.85rem;
+    background: #161b22;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #79c0ff;
+  }
+  pre code { background: none; padding: 0; color: inherit; }
+  .comment { color: #8b949e; }
+  .string { color: #a5d6ff; }
+  .key { color: #7ee787; }
+  .warn {
+    background: #2d1b00;
+    border: 1px solid #9e6a03;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    color: #e3b341;
+    font-size: 0.9rem;
+  }
+  .info {
+    background: #0d1f3c;
+    border: 1px solid #1f6feb;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    color: #79c0ff;
+    font-size: 0.9rem;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.9rem;
+  }
+  th, td {
+    padding: 10px 14px;
+    border: 1px solid #30363d;
+    text-align: left;
+  }
+  th { background: #161b22; color: #79c0ff; font-weight: 600; }
+  td { background: #0d1117; }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .badge-required { background: #238636; color: #fff; }
+  .badge-optional { background: #30363d; color: #c9d1d9; }
+  hr { border: none; border-top: 1px solid #21262d; margin: 32px 0; }
+  .back-top {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #21262d;
+    color: #c9d1d9;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: none;
+    z-index: 100;
+  }
+  .back-top:hover { background: #30363d; }
+</style>
+</head>
+<body>
+
+<h1>FloxBot 安装与升级教程</h1>
+<p class="subtitle">基于贝叶斯算法的 Telegram 群管机器人 &mdash; 广告拦截 / 入群认证 / 欢迎辞 / 关键字回复 / 消息清理</p>
+
+<div class="toc">
+  <h3>目录</h3>
+  <ol>
+    <li><a href="#prerequisites">前置条件</a></li>
+    <li><a href="#install">首次安装</a></li>
+    <li><a href="#configure">配置 .env</a></li>
+    <li><a href="#run">启动 Bot</a></li>
+    <li><a href="#panel">管理面板使用</a></li>
+    <li><a href="#commands">Bot 命令参考</a></li>
+    <li><a href="#upgrade">升级更新</a></li>
+    <li><a href="#troubleshoot">常见问题</a></li>
+  </ol>
+</div>
+
+<!-- ==================== 1. 前置条件 ==================== -->
+<h2 id="prerequisites">1. 前置条件</h2>
+
+<div class="step">
+  <div class="step-title">1.1 服务器要求</div>
+  <table>
+    <tr><th>项目</th><th>要求</th></tr>
+    <tr><td>系统</td><td>Ubuntu 20.04+ / Debian 11+ / CentOS 8+（推荐 Ubuntu 22.04）</td></tr>
+    <tr><td>CPU</td><td>1 核即可</td></tr>
+    <tr><td>内存</td><td>512MB 起步，推荐 1GB</td></tr>
+    <tr><td>磁盘</td><td>10GB 可用空间</td></tr>
+    <tr><td>网络</td><td>能访问 GitHub 和 Telegram API</td></tr>
+  </table>
+</div>
+
+<div class="step">
+  <div class="step-title">1.2 安装 Docker</div>
+  <p>如果服务器还没装 Docker，执行以下命令：</p>
+
+  <div class="code-block">
+    <div class="code-header"><span>Shell &mdash; 一键安装 Docker</span><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><code>curl -fsSL https://get.docker.com -o get-docker.sh &amp;&amp; sudo sh get-docker.sh</code></pre>
+  </div>
+
+  <p>安装完成后验证：</p>
+
+  <div class="code-block">
+    <div class="code-header"><span>Shell &mdash; 验证 Docker</span><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><code>docker --version
+docker compose version</code></pre>
+  </div>
+
+  <div class="info">需要 Docker 20.10+ 和 Docker Compose v2+。如果 <code>docker compose</code> 报错，参考 <a href="https://docs.docker.com/compose/install/" target="_blank">官方文档</a>。</div>
+</div>
+
+<div class="step">
+  <div class="step-title">1.3 创建 Telegram Bot</div>
+  <ol>
+    <li>打开 Telegram，搜索 <code>@BotFather</code></li>
+    <li>发送 <code>/newbot</code></li>
+    <li>按提示输入 Bot 名称和用户名（用户名必须以 <code>bot</code> 结尾）</li>
+    <li>保存返回的 <strong>Token</strong>（格式类似 <code>123456789:ABCdefGHIjklMNOpqrsTUVwxyz</code>）</li>
+    <li>发送 <code>/setprivacy</code> &rarr; 选择你的 Bot &rarr; 选 <strong>Disable</strong>（让 Bot 能接收群内所有消息）</li>
+    <li>发送 <code>/setcommands</code> &rarr; 选择你的 Bot &rarr; 粘贴以下命令列表：</li>
+  </ol>
+
+  <div class="code-block">
+    <div class="code-header"><span>BotFather 命令列表</span><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><code>start - 查看帮助
+markspam - 标记广告并封禁（回复消息使用）
+feedspam - 投喂广告文本训练
+listspam - 查看被删广告列表
+listbanuser - 查看封禁用户列表
+setverify - 设置入群认证模式
+setwelcome - 设置欢迎辞文本
+setwelcome_photo - 设置欢迎图片
+setwelcome_video - 设置欢迎视频
+setwelcome_btn - 设置欢迎按钮
+addkeyword - 添加关键字回复
+delkeyword - 删除关键字回复
+listkeywords - 列出关键字回复
+set - 快捷开关清理选项
+help - 查看帮助</code></pre>
+  </div>
+</div>
+
+<!-- ==================== 2. 首次安装 ==================== -->
+<h2 id="install">2. 首次安装</h2>
+
+<div class="step">
+  <div class="step-title">2.1 拉取代码</div>
+
+  <div class="code-block">
+    <div class="code-header"><span>Shell &mdash; 克隆仓库</span><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><code>cd ~
+git clone https://github.com/abai569/floxbot.git
+cd floxbot</code></pre>
+  </div>
+
+  <div class="warn">仓库是 Private 的。如果 VPS 上的 Git 没配过 GitHub 认证，使用 Token 方式：</div>
+
+  <div class="code-block">
+    <div class="code-header"><span>Shell &mdash; 带 Token 克隆</span><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><code>git clone https://你的GitHub用户名:你的Token@github.com/abai569/floxbot.git
+cd floxbot</code></pre>
+  </div>
+</div>
+
+<!-- ==================== 3. 配置 .env ==================== -->
+<h2 id="configure">3. 配置 .env</h2>
+
+<div class="step">
+  <div class="step-title">3.1 创建 .env 文件</div>
+
+  <div class="code-block">
+    <div class="code-header"><span>Shell &mdash; 复制模板</span><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><code>cp .env.example .env</code></pre>
+  </div>
+
+  <p>编辑 <code>.env</code>，填入以下内容：</p>
+
+  <div class="code-block">
+    <div class="code-header"><span>.env &mdash; 配置文件</span><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><code><span class="comment"># 必填：从 @BotFather 获取的 Token</span>
+<span class="key">TELEGRAM_BOT_TOKEN</span>=<span class="string">123456789:ABCdefGHIjklMNOpqrsTUVwxyz</span>
+
+<span class="comment"># 必填：管理面板登录账号密码</span>
+<span class="key">ADMIN_USERNAME</span>=<span class="string">admin</span>
+<span class="key">ADMIN_PASSWORD</span>=<span class="string">你的强密码</span>
+
+<span class="comment"># 可选：管理面板端口（默认 8060）</span>
+<span class="key">PORT</span>=<span class="string">8060</span></code></pre>
+  </div>
+
+  <div class="warn">
+    <strong>注意：</strong>
+    <ul>
+      <li><code>ADMIN_PASSWORD</code> 必须设置，否则无法登录管理面板</li>
+      <li>不要用默认密码，建议用随机字符串（至少 12 位）</li>
+      <li><code>.env</code> 文件不会被提交到 Git（已在 .gitignore 中）</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== 4. 启动 ==================== -->
+<h2 id="run">4. 启动 Bot</h2>
+
+<div class="step">
+  <div class="step-title">4.1 构建并启动</div>
+
+  <div class="code-block">
+    <div class="code-header"><span>Shell &mdash; 首次启动</span><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><code>docker compose up -d --build</code></pre>
+  </div>
+
+  <p>首次构建需要 3~5 分钟（下载 Ruby 依赖、编译 gems）。后续启动只需几秒。</p>
+
+  <p>查看运行状态：</p>
+
+  <div class="code-block">
+    <div class="code-header"><span>Shell &mdash; 查看容器状态</span><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><code>docker compose ps</code></pre>
+  </div>
+
+  <p>查看日志（按 <code>Ctrl+C</code> 退出日志查看）：</p>
+
+  <div class="code-block">
+    <div class="code-header"><span>Shell &mdash; 查看日志</span><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><code>docker compose logs -f bot</code></pre>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-title">4.2 验证启动成功</div>
+  <ol>
+    <li>浏览器打开 <code>http://你的VPS_IP:8060</code> &rarr; 弹出登录框 &rarr; 输入 .env 中的账号密码 &rarr; 看到管理面板 = 成功</li>
+    <li>在 Telegram 给 Bot 发 <code>/start</code> &rarr; Bot 回复欢迎消息 = Bot 正常工作</li>
+    <li>把 Bot 加入群 &rarr; 给 Bot 管理员权限（删除消息 + 封禁用户）&rarr; 开始自动拦截广告</li>
+  </ol>
+</div>
+
+<!-- ==================== 5. 管理面板 ==================== -->
+<h2 id="panel">5. 管理面板使用</h2>
+
+<div class="step">
+  <div class="step-title">5.1 页面导航</div>
+  <table>
+    <tr><th>页面</th><th>路径</th><th>功能</th></tr>
+    <tr><td>Trained Messages</td><td>/trained_messages</td><td>查看/管理训练数据，批量标记广告或正常消息</td></tr>
+    <tr><td>Group Classifiers</td><td>/group_classifier_states</td><td>查看各群贝叶斯模型状态、高频词分析</td></tr>
+    <tr><td>Banned Users</td><td>/banned_users</td><td>查看/解封被封禁的用户</td></tr>
+    <tr><td>Group Configs</td><td>/group_configs</td><td>配置各群的认证模式、欢迎辞、清理开关</td></tr>
+    <tr><td>Keywords</td><td>/keyword_replies</td><td>管理关键字回复规则</td></tr>
+    <tr><td>Mission Control</td><td>/jobs</td><td>查看后台任务队列状态</td></tr>
+  </table>
+</div>
+
+<div class="step">
+  <div class="step-title">5.2 配置群组（Group Configs）</div>
+  <p>点击 <strong>Group Configs</strong> &rarr; <strong>New group config</strong> 或编辑已有配置：</p>
+  <table>
+    <tr><th>字段</th><th>说明</th></tr>
+    <tr><td>Group ID</td><td>群 ID（负数，如 -100123456789）。可在群内发 <code>@RawDataBot</code> 获取</td></tr>
+    <tr><td>Verification Mode</td><td><code>none</code> 不验证 / <code>button</code> 按钮验证 / <code>math</code> 数学题验证</td></tr>
+    <tr><td>Timeout</td><td>验证超时时间（秒），默认 60</td></tr>
+    <tr><td>Welcome Text</td><td>欢迎辞文本，支持 <code>{name}</code> 和 <code>{title}</code> 变量</td></tr>
+    <tr><td>Welcome Photo</td><td>欢迎图片的 file_id（在群内发图给 Bot，Bot 会回复 file_id）</td></tr>
+    <tr><td>Welcome Video</td><td>欢迎视频的 file_id</td></tr>
+    <tr><td>Welcome Buttons</td><td>JSON 数组，如 <code>[{"text":"频道","url":"https://t.me/xxx"}]</code></td></tr>
+    <tr><td>Delete Forwards</td><td>自动删除转发消息</td></tr>
+    <tr><td>Delete Keyword Triggers</td><td>删除触发关键字回复的用户消息</td></tr>
+  </table>
+</div>
+
+<div class="step">
+  <div class="step-title">5.3 配置关键字回复（Keywords）</div>
+  <p>点击 <strong>Keywords</strong> &rarr; <strong>New keyword reply</strong>：</p>
+  <table>
+    <tr><th>字段</th><th>说明</th></tr>
+    <tr><td>Group ID</td><td>所属群 ID</td></tr>
+    <tr><td>Keyword</td><td>触发关键字</td></tr>
+    <tr><td>Reply Type</td><td><code>text</code> 文本 / <code>photo</code> 图片 / <code>video</code> 视频</td></tr>
+    <tr><td>Reply Content</td><td>回复内容（文本回复填文字，图片/视频填 file_id）</td></tr>
+    <tr><td>Caption</td><td>图片/视频回复时附带的文字说明</td></tr>
+    <tr><td>Exact match</td><td>精确匹配（消息内容完全等于关键字）</td></tr>
+    <tr><td>Regex match</td><td>正则匹配</td></tr>
+    <tr><td>都不选</td><td>包含匹配（消息包含关键字即触发）</td></tr>
+  </table>
+</div>
+
+<!-- ==================== 6. Bot 命令 ==================== -->
+<h2 id="commands">6. Bot 命令参考</h2>
+
+<div class="step">
+  <div class="step-title">6.1 广告管理</div>
+  <table>
+    <tr><th>命令</th><th>权限</th><th>说明</th></tr>
+    <tr><td><code>/markspam</code></td><td>管理员</td><td>回复一条消息使用，删除该消息 + 封禁发送者 + 标记为广告训练模型</td></tr>
+    <tr><td><code>/feedspam</code></td><td>任何人</td><td>投喂广告文本训练模型（可回复消息或直接跟文本）</td></tr>
+    <tr><td><code>/listspam</code></td><td>管理员</td><td>查看被删广告列表，可标记为正常（纠正误判）</td></tr>
+    <tr><td><code>/listbanuser</code></td><td>管理员</td><td>查看封禁列表，可解封用户</td></tr>
+  </table>
+</div>
+
+<div class="step">
+  <div class="step-title">6.2 群组设置</div>
+  <table>
+    <tr><th>命令</th><th>权限</th><th>说明</th></tr>
+    <tr><td><code>/setverify none</code></td><td>管理员</td><td>关闭入群验证</td></tr>
+    <tr><td><code>/setverify button</code></td><td>管理员</td><td>按钮验证模式</td></tr>
+    <tr><td><code>/setverify math</code></td><td>管理员</td><td>数学题验证模式</td></tr>
+    <tr><td><code>/setwelcome 文本</code></td><td>管理员</td><td>设置欢迎辞（支持 {name} {title}）</td></tr>
+    <tr><td><code>/setwelcome_photo</code></td><td>管理员</td><td>回复一张图片给 Bot 设置欢迎图</td></tr>
+    <tr><td><code>/setwelcome_video</code></td><td>管理员</td><td>回复一个视频给 Bot 设置欢迎视频</td></tr>
+    <tr><td><code>/setwelcome_btn</code></td><td>管理员</td><td>设置欢迎按钮 JSON</td></tr>
+  </table>
+</div>
+
+<div class="step">
+  <div class="step-title">6.3 关键字回复</div>
+  <table>
+    <tr><th>命令</th><th>权限</th><th>说明</th></tr>
+    <tr><td><code>/addkeyword 关键字 -> 回复内容</code></td><td>管理员</td><td>添加关键字回复</td></tr>
+    <tr><td><code>/delkeyword 关键字</code></td><td>管理员</td><td>删除关键字回复</td></tr>
+    <tr><td><code>/listkeywords</code></td><td>管理员</td><td>列出所有关键字回复</td></tr>
+  </table>
+</div>
+
+<div class="step">
+  <div class="step-title">6.4 消息清理</div>
+  <table>
+    <tr><th>命令</th><th>权限</th><th>说明</th></tr>
+    <tr><td><code>/set del_forward on</code></td><td>管理员</td><td>自动删除转发消息</td></tr>
+    <tr><td><code>/set del_forward off</code></td><td>管理员</td><td>关闭转发删除</td></tr>
+    <tr><td><code>/set del_keyword on</code></td><td>管理员</td><td>删除触发关键字的用户消息</td></tr>
+    <tr><td><code>/set del_keyword off</code></td><td>管理员</td><td>关闭关键字触发删除</td></tr>
+  </table>
+</div>
+
+<!-- ==================== 7. 升级 ==================== -->
+<h2 id="upgrade">7. 升级更新</h2>
+
+<div class="step">
+  <div class="step-title">7.1 常规升级（推荐）</div>
+  <p>每次有新代码推送到 GitHub 后，在 VPS 上执行：</p>
+
+  <div class="code-block">
+    <div class="code-header"><span>Shell &mdash; 一键升级</span><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><code>cd ~/floxbot
+git pull
+docker compose up -d --build</code></pre>
+  </div>
+
+  <p>这会拉取最新代码、重新构建镜像、重启所有容器。数据库迁移会自动执行。</p>
+</div>
+
+<div class="step">
+  <div class="step-title">7.2 仅重启（不重新构建）</div>
+  <p>如果只是修改了 .env 或想重启服务（不拉新代码）：</p>
+
+  <div class="code-block">
+    <div class="code-header"><span>Shell &mdash; 重启服务</span><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><code>cd ~/floxbot
+docker compose restart</code></pre>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-title">7.3 完全重建（清理旧镜像）</div>
+  <p>如果升级后有问题，可以清理旧镜像重新构建：</p>
+
+  <div class="code-block">
+    <div class="code-header"><span>Shell &mdash; 清理重建</span><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><code>cd ~/floxbot
+docker compose down
+docker compose build --no-cache
+docker compose up -d</code></pre>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-title">7.4 查看当前版本</div>
+
+  <div class="code-block">
+    <div class="code-header"><span>Shell &mdash; 查看最近提交</span><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><code>cd ~/floxbot
+git log --oneline -5</code></pre>
+  </div>
+</div>
+
+<!-- ==================== 8. 常见问题 ==================== -->
+<h2 id="troubleshoot">8. 常见问题</h2>
+
+<div class="step">
+  <div class="step-title">Q: 管理面板打不开</div>
+  <div class="code-block">
+    <div class="code-header"><span>Shell &mdash; 排查步骤</span><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><code><span class="comment"># 1. 检查容器是否运行</span>
+docker compose ps
+
+<span class="comment"># 2. 检查端口是否监听</span>
+ss -tlnp | grep 8060
+
+<span class="comment"># 3. 检查防火墙是否放行</span>
+sudo ufw allow 8060/tcp
+
+<span class="comment"># 4. 查看 app 容器日志</span>
+docker compose logs app</code></pre>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-title">Q: Bot 不回复消息</div>
+  <div class="code-block">
+    <div class="code-header"><span>Shell &mdash; 排查步骤</span><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><code><span class="comment"># 1. 查看 bot 容器日志</span>
+docker compose logs bot
+
+<span class="comment"># 2. 确认 .env 中 TELEGRAM_BOT_TOKEN 正确</span>
+cat .env | grep TOKEN
+
+<span class="comment"># 3. 重启 bot 容器</span>
+docker compose restart bot</code></pre>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-title">Q: 数据库迁移失败</div>
+  <div class="code-block">
+    <div class="code-header"><span>Shell &mdash; 手动迁移</span><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><code>docker compose exec app bin/rails db:migrate</code></pre>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-title">Q: 如何备份数据</div>
+  <div class="code-block">
+    <div class="code-header"><span>Shell &mdash; 备份 SQLite 数据库</span><button class="copy-btn" onclick="copyCode(this)">复制</button></div>
+    <pre><code><span class="comment"># 找到数据库文件位置</span>
+docker compose exec app find /rails/storage -name "*.sqlite3"
+
+<span class="comment"># 复制到宿主机</span>
+docker compose cp app:/rails/storage/production.sqlite3 ./backup_$(date +%Y%m%d).sqlite3</code></pre>
+  </div>
+</div>
+
+<hr>
+<p style="color: #8b949e; text-align: center; margin-top: 40px;">FloxBot &mdash; 基于贝叶斯算法的 Telegram 群管机器人</p>
+
+<script>
+function copyCode(btn) {
+  const code = btn.closest('.code-block').querySelector('pre code').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = '已复制';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '复制';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+
+</body>
+</html>
