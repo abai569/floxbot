@@ -558,3 +558,67 @@ zh:
         is_exact: "精确匹配"
         is_regex: "正则匹配"
         caption: "附带说明"
+
+  # === Mission Control Jobs ===
+  mission_control:
+    jobs:
+      application_name: "任务管理"
+      navigation:
+        jobs: "任务"
+        queues: "队列"
+        workers: "工作进程"
+        recurring_tasks: "定时任务"
+      jobs:
+        index:
+          title: "任务"
+          filter_all: "全部"
+          filter_pending: "等待中"
+          filter_failed: "失败"
+          filter_finished: "已完成"
+          filter_blocked: "已阻塞"
+          filter_retryable: "可重试"
+          filter_discarded: "已丢弃"
+          retry: "重试"
+          discard: "丢弃"
+          retry_all: "全部重试"
+          discard_all: "全部丢弃"
+          empty: "暂无任务"
+        show:
+          title: "任务 #%{id}"
+          retry: "重试"
+          discard: "丢弃"
+          block: "阻塞"
+          unblock: "解除阻塞"
+      queues:
+        index:
+          title: "队列"
+          paused: "已暂停"
+          pause: "暂停"
+          resume: "恢复"
+          empty: "暂无队列"
+        show:
+          title: "队列 %{name}"
+      workers:
+        index:
+          title: "工作进程"
+          empty: "暂无工作进程"
+      recurring_tasks:
+        index:
+          title: "定时任务"
+          empty: "暂无定时任务"
+      status:
+        pending: "等待中"
+        claimed: "已领取"
+        ready: "就绪"
+        running: "运行中"
+        completed: "已完成"
+        finished: "已完成"
+        failed: "失败"
+        blocked: "已阻塞"
+        retryable: "可重试"
+        discarded: "已丢弃"
+        scheduled: "已调度"
+      actions:
+        retry: "重试"
+        discard: "丢弃"
+        unblock: "解除阻塞"
