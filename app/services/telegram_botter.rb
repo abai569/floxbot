@@ -1109,7 +1109,7 @@ class TelegramBotter
     case config.verification_mode
     when "button"
       code = SecureRandom.hex(4)
-      text = "Welcome #{name}! Please click the button below to verify you are not a bot."
+      text = I18n.t("telegram_bot.verification.button", name: name, locale: @lang_code)
       buttons = [{ text: "✅ Verify", callback_data: build_callback_data(CallbackAction::VERIFY, uid: user_id, code: code) }]
       sent = bot.api.send_message(chat_id: chat_id, text: text,
         reply_markup: { inline_keyboard: [buttons] }.to_json)
@@ -1123,7 +1123,7 @@ class TelegramBotter
       b = rand(1..20)
       op = %w[+ -].sample
       answer = op == "+" ? a + b : a - b
-      text = "Welcome #{name}! Please solve: #{a} #{op} #{b} = ?"
+      text = I18n.t("telegram_bot.verification.math", name: name, a: a, op: op, b: b, locale: @lang_code)
       wrong = (answer + rand(2..5) * (rand(2) == 0 ? 1 : -1)).abs
       buttons = [
         [{ text: "#{answer}", callback_data: build_callback_data(CallbackAction::VERIFY_MATH, uid: user_id, code: answer) }],

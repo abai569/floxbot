@@ -121,6 +121,9 @@ en:
       error_message: "❌ An error occurred while processing your request."
     is_group_chat:
       error_message: "❌ Current chat is not a group chat" 
+    verification:
+      button: "Welcome %{name}! Please click the button below to verify you are not a bot."
+      math: "Welcome %{name}! Please solve: %{a} %{op} %{b} = ?"
     handle_regular_message:
       alert_message: "⚠️ Potential spam from @[%{user_name}](tg://user?id=%{user_id}) was automatically removed. (This message will be deleted in %{delete_message_delay} mins.)" 
       ban_user_message: "✅ User @[%{user_name}](tg://user?id=%{user_id}) has been banned from this group for repeated spam."

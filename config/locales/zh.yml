@@ -97,6 +97,9 @@ zh:
       error_message: "❌ 处理消息异常"
     is_group_chat:
       error_message: "❌ 当前聊天不是群组"
+    verification:
+      button: "欢迎 %{name}！请点击下方按钮完成验证。"
+      math: "欢迎 %{name}！请计算：%{a} %{op} %{b} = ?"
     handle_regular_message:
       alert_message: "⚠️ 已自动删除检来自 @[%{user_name}](tg://user?id=%{user_id})的广告（此消息%{delete_message_delay}分钟内会自动删除）"
       ban_user_message: "✅ 用户 @[%{user_name}](tg://user?id=%{user_id}) 因发送垃圾广告已被封禁。"
