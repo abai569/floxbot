@@ -76,7 +76,7 @@ class GroupConfigsController < ApplicationController
       :group_id, :group_name, :verification_mode, :verification_timeout,
       :welcome_text, :welcome_photo_id, :welcome_video_id, :welcome_buttons_json,
       :del_join, :del_leave, :del_forward, :del_keyword, :del_service,
-      :alert_delete_delay, :keyword_delete_delay
+      :alert_delete_delay, :keyword_delete_delay, :language
     )
   end
 

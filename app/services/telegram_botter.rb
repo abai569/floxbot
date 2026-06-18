@@ -72,8 +72,11 @@ class TelegramBotter
   # 2. Falls back to the sender's language code from their Telegram profile.
   # 3. Defaults to 'en' if no language is determined.
   def determine_language(message)
-    # 1. Check for group-specific language setting
+    # 1. Check for group-specific language setting in GroupConfig
     if is_group_message?(message)
+      group_config = GroupConfig.find_by(group_id: message.chat.id)
+      return group_config.language if group_config&.language.present?
+
       group_state = GroupClassifierState.find_by(group_id: message.chat.id)
       return group_state.language if group_state&.language.present?
     end

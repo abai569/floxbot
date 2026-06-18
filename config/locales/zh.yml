@@ -380,6 +380,8 @@ zh:
       mode: "模式"
       timeout: "超时"
       seconds: "秒"
+      language: "Bot 语言"
+      language_auto: "自动（跟随用户）"
       welcome_message: "欢迎消息"
       text: "文字"
       photo: "图片"
@@ -406,10 +408,17 @@ zh:
         group_id: "群组 ID"
         verification_mode: "验证模式"
         verification_timeout: "超时时间（秒）"
+        language: "Bot 语言"
+        alert_delete_delay: "警告消息删除延迟（分，0=不删，默认3）"
+        keyword_delete_delay: "关键字回复删除延迟（分，留空=不删）"
       verification_modes:
         none: "不验证"
         button: "按钮验证"
         math: "数学验证"
+      language_options:
+        auto: "自动（跟随用户）"
+        zh: "中文"
+        en: "English"
       welcome: "欢迎消息"
       welcome_text: "欢迎文字（支持 {name}, {title} 变量）"
       welcome_photo: "欢迎图片 file_id"
@@ -418,9 +427,6 @@ zh:
       cleanup: "消息清理"
       del_forward: "删除转发消息"
       del_keyword: "删除关键字触发消息"
-      labels:
-        alert_delete_delay: "警告消息删除延迟（分，0=不删，默认3）"
-        keyword_delete_delay: "关键字回复删除延迟（分，留空=不删）"
 
   keyword_replies:
     index:
