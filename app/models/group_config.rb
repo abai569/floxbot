@@ -1,5 +1,5 @@
 class GroupConfig < ApplicationRecord
-  enum :verification_mode, { none: 0, button: 1, math: 2 }
+  enum :verification_mode, { none: 0, button: 1, math: 2 }, _scopes: false
 
   validates :group_id, presence: true, uniqueness: true
 
