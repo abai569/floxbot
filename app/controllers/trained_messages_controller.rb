@@ -1,0 +1,180 @@
+class TrainedMessagesController < ApplicationController
+  before_action :set_trained_message, only: %i[ show edit update destroy ]
+
+  # GET /trained_messages or /trained_messages.json
+  def index
+    @trained_messages = TrainedMessage.all
+
+    if params[:message_type].present? && params[:message_type] != "all"
+      @trained_messages = @trained_messages.where(message_type: params[:message_type])
+    end
+
+    if params[:training_target].present? && params[:training_target] != "all"
+      @trained_messages = @trained_messages.where(training_target: params[:training_target])
+    end
+
+    if params[:group_name].present? && params[:group_name] != "all"
+      @trained_messages = @trained_messages.where(group_name: params[:group_name])
+    end
+
+    if params[:source].present? && params[:source] != "all"
+      @trained_messages = @trained_messages.where(source: params[:source])
+    end
+
+    if params[:marked_by].present? && params[:marked_by] != "all"
+      @trained_messages = @trained_messages.where(marked_by: params[:marked_by])
+    end
+
+    if params[:search].present?
+      @trained_messages = @trained_messages.where("message LIKE ?", "%#{params[:search]}%")
+    end
+
+    # Sorting
+    sort_by = params[:sort] || "updated_at"
+    sort_direction = params[:direction] || "desc"
+    @trained_messages = @trained_messages.order("#{sort_by} #{sort_direction}")
+
+    # Pagination
+    @per_page = (params[:per_page] || 10).to_i
+    @per_page = 10 if @per_page < 1 || @per_page > 100
+
+    @total_count = @trained_messages.count
+    @page = (params[:page] || 1).to_i
+    @page = 1 if @page < 1
+
+    offset = (@page - 1) * @per_page
+    @trained_messages = @trained_messages.limit(@per_page).offset(offset)
+
+    # Calculate pagination info
+    @total_pages = (@total_count.to_f / @per_page).ceil
+
+    # Using unscoped ensures we get all possible options, not just the filtered ones.
+    filter_data = TrainedMessage.unscoped.distinct.pluck(:message_type, :training_target, :group_name, :source, :marked_by)
+
+    # Get filter options
+    @message_types = filter_data.map(&:first).uniq.compact.sort
+    @training_targets = filter_data.map(&:second).uniq.compact.sort
+    @group_names = filter_data.map(&:third).uniq.compact.sort
+    @sources = filter_data.map(&:fourth).uniq.compact.sort
+    @marked_bys = filter_data.map { |data| data[4] }.uniq.compact.sort
+  end
+
+  # GET /trained_messages/1 or /trained_messages/1.json
+  def show
+  end
+
+  # GET /trained_messages/new
+  def new
+    @trained_message = TrainedMessage.new
+  end
+
+  # GET /trained_messages/1/edit
+  def edit
+  end
+
+  def bulk_update
+    message_ids = params[:trained_message_ids]
+    if message_ids.blank?
+      redirect_to trained_messages_path(request.query_parameters), alter: "You must select at least one message."
+      return
+    end
+
+    messages = TrainedMessage.where(id: message_ids)
+    update_count = messages.count
+
+    new_message_type_symbol = case params[:commit]
+    when "Mark as Ham" then :ham
+    when "Mark as Spam" then :spam
+    else
+                                flash[:alert] = "Invalid action."
+                                redirect_to trained_messages_path(params.except(:commit, :trained_message_ids, :authenticity_token, :controller, :action).to_unsafe_h)
+                                return
+    end
+
+    messages.update_all(message_type: new_message_type_symbol, marked_by: TrainedMessage.marked_bies[:admin_dashboard], updated_at: Time.current)
+
+    # Update all messages to the same message type if they have same
+    # message hash
+    message_hashes_to_sync = messages.pluck(:message_hash).uniq
+    message_hashes_to_sync.each do |hash|
+      MessageTypeSyncJob.perform_later(hash, new_message_type_symbol)
+    end
+
+    messages.each do |message|
+      if message.spam? || message.ham?
+        BatchProcessor.add_to_batch(
+          "classifier_training_batch_key",
+          "ClassifierTrainerJob",
+          message,
+          {},
+          batch_size: 500,
+          batch_window: 10.minutes
+        )
+      end
+    end
+
+    message_type_name = new_message_type_symbol.to_s
+    flash[:notice] = "Successfully marked #{update_count} messages as #{message_type_name}"
+    redirect_to trained_messages_path(params.except(:commit, :trained_message_ids, :authenticity_token, :controller, :action).to_unsafe_h)
+  end
+
+  # POST /trained_messages or /trained_messages.json
+  def create
+    @trained_message = TrainedMessage.new(trained_message_params)
+    @trained_message.marked_by = :admin_dashboard
+
+    respond_to do |format|
+      if @trained_message.save
+        format.html { redirect_to @trained_message, notice: "Trained message was successfully created." }
+        format.json { render :show, status: :created, location: @trained_message }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @trained_message.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # PATCH/PUT /trained_messages/1 or /trained_messages/1.json
+  def update
+    # When updating through the admin dashboard, mark as admin_dashboard
+    @trained_message.marked_by = :admin_dashboard if @trained_message.changed?
+
+    respond_to do |format|
+      if @trained_message.update(trained_message_params)
+        format.html { redirect_to @trained_message, notice: "Trained message was successfully updated.", status: :see_other }
+        format.json { render :show, status: :ok, location: @trained_message }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @trained_message.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # DELETE /trained_messages/1 or /trained_messages/1.json
+  def destroy
+    @trained_message.destroy!
+    return_url = params[:return_url] || trained_messages_path
+
+    respond_to do |format|
+      format.html { redirect_to return_url, notice: "Trained message was successfully destroyed.", status: :see_other }
+      format.json { head :no_content }
+    end
+  end
+
+  private
+  # Use callbacks to share common setup or constraints between actions.
+  def set_trained_message
+    @trained_message = TrainedMessage.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def trained_message_params
+    params.require(:trained_message).permit(:group_id, :message, :message_type, :sender_chat_id, :sender_user_name, :group_name, :training_target, :marked_by)
+  end
+
+  def index_params
+    params.permit(:search, :message_type, :training_target, :group_name, :source, :marked_by, :per_page, :sort, :direction, :page)
+  end
+
+  helper_method :index_params
+end

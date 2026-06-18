@@ -1,0 +1,44 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+one:
+  group_id: 1
+  message: "This is a test spam message"
+  message_type: "spam"                    
+  sender_chat_id: 123456
+  sender_user_name: "test_user"
+  group_name: "Test Group"
+  training_target: "message_content"      
+  message_id: 1001
+
+two:
+  group_id: 2
+  message: "This is a test ham message"
+  message_type: "ham"                     
+  sender_chat_id: 789012
+  sender_user_name: "test_user2"
+  group_name: "Test Group 2"
+  training_target: "user_name"            
+  message_id: 1002
+
+pre_existing_spam:
+  group_id: -100123456789
+  message: "a pre-existing spam message"
+  message_hash: <%= Digest::SHA256.hexdigest("a pre-existing spam message") %>
+  message_type: <%= TrainedMessage.message_types[:spam] %>
+  training_target: <%= TrainedMessage.training_targets[:message_content] %>
+  sender_chat_id: 987654321
+
+pre_existing_spam_with_found_tag:
+  group_id: -100123456789
+  message: '#BageVM 黑五限时狂欢开启啦！🖤🔥 今年的黑五，就让服务器陪你一起冲！它们已经在机房里瑟瑟发抖等你认领了 😆 🌟 Los Angeles - TINY 🖥 1x AMD Ryzen 9950x 💾 1GB RAM 📦 20GB SSD 🌐 4TB 流量 @1000Mbps 🔢 1 IPv4 & 1 IPv6 👉 购买地址 https://www.bagevm.com/aff.php?aff'
+  message_hash: <%= Digest::SHA256.hexdigest('#BageVM 黑五限时狂欢开启啦！🖤🔥 今年的黑五，就让服务器陪你一起冲！它们已经在机房里瑟瑟发抖等你认领了 😆 🌟 Los Angeles - TINY 🖥 1x AMD Ryzen 9950x 💾 1GB RAM 📦 20GB SSD 🌐 4TB 流量 @1000Mbps 🔢 1 IPv4 & 1 IPv6 👉 购买地址 https://www.bagevm.com/aff.php?aff') %>
+  message_type: <%= TrainedMessage.message_types[:spam] %>
+  training_target: <%= TrainedMessage.training_targets[:message_content] %>
+  sender_chat_id: 987654321
+
+pre_existing_ham:
+  group_id: -100123789456
+  message: "a pre-existing ham message"
+  message_hash: <%= Digest::SHA256.hexdigest("a pre-existing ham message") %>
+  message_type: <%= TrainedMessage.message_types[:ham] %>
+  training_target: <%= TrainedMessage.training_targets[:message_content] %>
+  sender_chat_id: 765498321

@@ -1,0 +1,35 @@
+<% content_for :title, "Keyword Reply" %>
+
+<div class="md:w-2/3 w-full">
+  <h1 class="font-bold text-4xl">Keyword Reply</h1>
+
+  <div class="my-5 space-y-4">
+    <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div><strong>Group ID:</strong> <%= @keyword_reply.group_id %></div>
+        <div><strong>Keyword:</strong> <code class="bg-gray-100 px-2 py-1 rounded"><%= @keyword_reply.keyword %></code></div>
+        <div><strong>Match mode:</strong>
+          <% if @keyword_reply.is_exact? %>Exact<% elsif @keyword_reply.is_regex? %>Regex<% else %>Include<% end %>
+        </div>
+        <div><strong>Reply type:</strong> <%= @keyword_reply.reply_type.humanize %></div>
+      </div>
+
+      <div>
+        <strong class="block font-medium mb-1">Reply content:</strong>
+        <div class="bg-gray-50 p-3 rounded whitespace-pre-wrap"><%= @keyword_reply.reply_content %></div>
+        <% if @keyword_reply.reply_text.present? %>
+          <div class="mt-2">
+            <strong class="block font-medium mb-1">With caption:</strong>
+            <div class="bg-gray-50 p-3 rounded"><%= @keyword_reply.reply_text %></div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%= link_to "Edit", edit_keyword_reply_path(@keyword_reply), class: "rounded-lg px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+  <%= link_to "Back", keyword_replies_path, class: "ml-2 rounded-lg px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+  <%= button_to "Delete", @keyword_reply, method: :delete,
+      class: "ml-2 rounded-lg px-3.5 py-2.5 bg-red-100 hover:bg-red-200 text-red-700 font-medium cursor-pointer inline-block",
+      data: { turbo_confirm: "Are you sure?" } %>
+</div>

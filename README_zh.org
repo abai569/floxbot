@@ -1,0 +1,121 @@
+#+LATEX_CLASS: ramsay-org-article
+#+LATEX_CLASS_OPTIONS: [oneside,A4paper,12pt]
+#+AUTHOR: Ramsay Leung
+#+EMAIL: ramsayleung@gmail.com
+#+DATE: 2025-08-28 Thu 23:16
+- [[./README_en.org][English Version]]
+- [[https://ramsayleung.github.io/zh/post/2025/一个自学习的telegram广告拦截机器人/][博客文章：一个自学习的Telegram广告拦截机器人]]
+* 基于贝叶斯算法的 Telegram广告拦截机器人
+  BSS([[https://t.me/BayesSpamSniperBot?start=ad_7202424896][@BayesSpamSniperBot]]) 是一个具备自学习能力的，基于贝叶斯定理实现的开源 Telegram 广告拦截机器人
+** 特点
+   常见的 Telegram 广告机器人是大多是基于关键字的，通过匹配关键字进行文本拦截，非常容易被发垃圾广告的人绕过。
+
+   这不禁让我想起了保罗.格雷厄姆在《黑客与画家》一书在2002年介绍的情况：
+
+   当时电子邮件兴起，也有非常多的垃圾邮件，常见的垃圾广告拦截方式是关键字匹配+邮件地址黑名单，但是既低效也容易被绕过。
+
+   保罗.格雷厄姆就创造性地使用贝叶斯算法(Bayes Theorem)实现了一个[[https://paulgraham.com/spam.html][广告拦截器]], 效果竟然出奇地好。
+
+   对于 Telegram 的垃圾广告而言，这不是类似的问题嘛？那我可以用类似的解决方案来解决 Telegram 广告的问题嘛
+** 如何使用
+   - 将机器人[[https://t.me/BayesSpamSniperBot?startgroup=true][添加到您的群组]]
+   - 给予机器人管理员权限（删除消息(delete message )，封禁用户权限(ban user )）
+   - 机器人将自动开始工作
+
+   机器人会自动识别群内广告，然后删除文本消息，如果发送垃圾文本超过3次，将会被封禁。
+
+   [[./doc/img/detect_spam_and_ban_user.jpg]]
+
+   本机器人的设计理念就是最小化打扰管理员与用户，提供简单的操作命令，并最大可能地自动化，
+   所以本机器人只提供以下三个命令（支持"/"开头自动补全）:
+
+   [[./doc/img/command_auto_completion.jpg]]
+*** =/markspam=
+    删除垃圾消息并封禁用户, 需要管理员权限。
+
+    在某条你想封禁的信息下回复 =/markspam=, 机器人就会自动把该条消息删除被封禁用户.
+
+    [[./doc/img/markspam_2.jpg]]
+
+    (消息也被删除)
+    [[./doc/img/markspam.jpg]]
+
+    与常见的群管理机器人不同，这条命令不仅会删除垃圾消息并封禁用户, 因为这条消息还被管理员标记成垃圾文本，有非常高的置信度，所以系统就会以这条垃圾文本为训练数据，对模型进行实时更新。
+
+    下次类似的发言不仅会被识别，所有使用本机器人的群组都会受益，也会把类似的文本标记成垃圾广告
+*** =/listbanuser=
+    查看封禁账户列表, 需要管理员权限。
+    
+    [[./doc/img/listbanuser.jpg]]
+
+    查看已封禁的用户列表，并主动解封。
+*** =/listspam=
+    查看广告消息列表, 需要管理员权限。
+
+    [[./doc/img/listspam.jpg]]
+
+    查看被标记为广告的消息列表，并可标记为正常。
+*** =/feedspam=
+    投喂垃圾信息来训练，无任何权限要求，可私聊投喂或在群组内投喂.
+
+    [[./doc/img/feedspam2.jpg]]
+
+    [[./doc/img/feedspam.jpg]]
+
+** 架构设计
+   Telegram Bot 支持两种与 Telegram 服务器交互的模式，分别是：
+   1. Webhook: Telegram 服务器会在 Bot 收到新消息时主动回调此前 Bot 注册的地址，Bot Server 只需要处理回调的消息
+   2. Long Polling: Bot Server 一直轮询 Telegram 服务器，看是否有新消息，有就处理，本项目使用的是此模式
+
+   [[./doc/img/webhook_vs_long_polling.jpg]]
+*** 消息分析
+    [[./doc/img/spam_analyze.jpg]]
+
+    Bot Server 收到消息之后，会派发到单独的 =telegram_bot_worker= 处理，然后根据预训练的模型判断是否是垃圾文本，如果是，调用 bot API 删除消息
+*** 封禁并训练
+    [[./doc/img/mark_spam_and_ban_user.jpg]]
+
+    Bot Server 收到消息之后，会派发到单独的 =telegram_bot_worker= 处理， =telegram_bot_worker= 会调用 bot API 删除消息并封禁用户，并插入一条训练数据，标记为垃圾文本(spam)
+
+    保存训练数据会触发 hook, 创建一个训练消息，投递到消息队列 =training=, 会有另外的 worker =classifier_trainer= 订阅 =training= 消息，并使用新消息重新训练和更新模型
+** 如何贡献
+   本项目纯粹用爱发电，如果想支持本项目，有以下的方式进行贡献:
+
+   1. 通过 =/feedspam= 命令投喂训练数据
+   2. [[https://github.com/sponsors/ramsayleung][Sponsor 作者]]
+** 版本日志
+  [[./CHANGELOG.org]]
+** 常见问题
+*** 说得这么厉害，为什么别人在我群里发的广告还是没有被识别？
+    贝叶斯算法本质是个概率算法，如果它没有见过类似的广告，那么它就没法判断是否垃圾广告 :(
+
+    稍安勿躁，你需要做只是使用 =/markspam= 删除消息并封禁用户，就可以帮助训练这个bot, 所有使用这个 bot 的用户都会因此受益
+*** wocao, 你这个机器人怎么把我正常的聊天消息也误删了？
+    我知道误删消息相当令人不爽，所以我已经竭力优化机器人，提高置信度（是广告的概率超过95%才会被判定为广告），
+    但是因为即时通信消息「[[https://ramsayleung.github.io/zh/post/2025/%E5%9F%BA%E4%BA%8E%E8%B4%9D%E5%8F%B6%E6%96%AF%E7%AE%97%E6%B3%95%E7%9A%84telegram%E5%B9%BF%E5%91%8A%E6%8B%A6%E6%88%AA%E6%9C%BA%E5%99%A8%E4%BA%BA%E4%BA%8C/#%E9%82%AE%E4%BB%B6%E4%B8%8E%E5%8D%B3%E6%97%B6%E6%B6%88%E6%81%AF%E7%9A%84%E5%B7%AE%E5%BC%82][短文本+无上下文]]」的特性，误删仍然是无法完全根除的。
+
+    比如聊天消息是 =境外CDN= ，管理员认为是正常群聊，但被误删。实际这个消息和广告非常相似，比如有些广告是：
+
+    #+begin_quote
+🔥 国内 - 海外 服务器 免备案 大带宽 欢迎业务 🌍 CDN加速网站 高防 过移动屏蔽 🔴 直播 推拉流 稳定 大带宽 不﻿限制流量 🛠️ 搭建 专业定制开发app 🔥🔥   📱 销售：@cdncloud001 📢 频道： @xxxx 
+    #+end_quote
+
+    正常聊天消息 =京东淘宝 tg = 被误删，这个和广告也相当类似:
+
+    #+begin_quote
+     有淘宝京东闲鱼抖音购物软件的兄弟来找我干活 一单一结280秒结 @xxxx21
+    #+end_quote
+
+    #+begin_quote
+     一手出 微信 QQ 支付宝 抖音 京东 淘宝 WS 火种 手机卡 电销卡 流量卡 需要联系唯一客服飞机： @xxxx01 双向 @xxxx_bot
+    #+end_quote
+
+    所以提供了 =/listspam= 命令给管理员，管理员可以查看被删除的消息，如果发现有被误判的，可以手工标记为正常:
+
+    [[./doc/img/listspam.jpg]]
+*** 如何看到删除的消息？
+    有些消息被删除了，但是不知道有没有误删，有日志吗？
+
+    可以通过 =/listspam= 看到被删除的消息，如果看到有消息被误标记为广告，也可以将其标记为正常:
+
+    [[./doc/img/listspam.jpg]]

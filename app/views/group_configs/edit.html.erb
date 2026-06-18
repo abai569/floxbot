@@ -1,0 +1,8 @@
+<% content_for :title, "Editing group config" %>
+
+<h1 class="font-bold text-4xl mb-6">Editing group config</h1>
+
+<%= render "form", group_config: @group_config %>
+
+<%= link_to "Show", @group_config, class: "ml-2 rounded-lg px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+<%= link_to "Back", group_configs_path, class: "ml-2 rounded-lg px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>

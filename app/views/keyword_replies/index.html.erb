@@ -1,0 +1,66 @@
+<% content_for :title, "Keyword Replies" %>
+
+<div class="w-full">
+  <% if notice.present? %>
+    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+  <% end %>
+
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="font-bold text-4xl">Keyword Replies</h1>
+    <%= link_to "New keyword reply", new_keyword_reply_path, class: "rounded-lg px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium" %>
+  </div>
+
+  <% if @group_names.any? %>
+    <div class="mb-4">
+      <%= form_with url: keyword_replies_path, method: :get, local: true, class: "flex items-center space-x-3" do |form| %>
+        <%= form.select :group_name,
+            options_for_select([["All Groups", "all"]] + @group_names.map { |n| [n, n] }, params[:group_name]),
+            {}, class: "rounded-lg border-gray-300 shadow-sm py-2 px-3" %>
+        <%= form.submit "Filter", class: "px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium cursor-pointer" %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Group</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Keyword</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Match</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Reply</th>
+          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <% @keyword_replies.each do |kr| %>
+          <tr class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= kr.group_id %></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><%= kr.keyword %></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">
+              <%= tag.span "Exact", class: "px-1.5 py-0.5 rounded text-xs bg-yellow-100 text-yellow-700" if kr.is_exact? %>
+              <%= tag.span "Regex", class: "px-1.5 py-0.5 rounded text-xs bg-red-100 text-red-700" if kr.is_regex? %>
+              <%= tag.span "Include", class: "px-1.5 py-0.5 rounded text-xs bg-blue-100 text-blue-700" if !kr.is_exact? && !kr.is_regex? %>
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
+              <% if kr.text? %>
+                <%= truncate(kr.reply_content, length: 50) %>
+              <% elsif kr.photo? %>
+                📷 <%= truncate(kr.reply_text, length: 30) %>
+              <% elsif kr.video? %>
+                🎬 <%= truncate(kr.reply_text, length: 30) %>
+              <% end %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <%= link_to "View", keyword_reply_path(kr), class: "text-indigo-600 hover:text-indigo-900 mr-2" %>
+              <%= link_to "Edit", edit_keyword_reply_path(kr), class: "text-indigo-600 hover:text-indigo-900 mr-2" %>
+              <%= link_to "Delete", keyword_reply_path(kr), method: :delete,
+                  class: "text-red-600 hover:text-red-900",
+                  data: { turbo_confirm: "Are you sure?" } %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

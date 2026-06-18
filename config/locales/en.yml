@@ -1,0 +1,129 @@
+# Files in the config/locales directory are used for internationalization and
+# are automatically loaded by Rails. If you want to use locales other than
+# English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t "hello"
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t("hello") %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# To learn more about the API, please read the Rails Internationalization guide
+# at https://guides.rubyonrails.org/i18n.html.
+#
+# Be aware that YAML interprets the following case-insensitive strings as
+# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
+# must be quoted to be interpreted as strings. For example:
+#
+#     en:
+#       "yes": yup
+#       enabled: "ON"
+
+en:
+  telegram_bot:
+    settings:
+      open_instructions: "Click the button below to open the settings panel for this group."
+    welcome:
+      title: "🤖 Welcome to the machine learning-based spam detection bot!"
+      description: "This bot is powered by passion, and its code is [open source](https://github.com/ramsayleung/bayes_spam_sniper)"
+      select_option: "Please select an option below:"
+    buttons:
+      open_settings: "⚙️ Open Settings"
+      user_guide: "📖User Guide"
+      add_to_group: "💯Get Start" 
+      back: "Back"
+    user_guide:
+      title: "📖 *User Guide*"
+      how_to_use: "*How to Use:*"
+      steps:
+        - "Add the bot to [your group](https://t.me/%{bot_username}?startgroup=true)"
+        - "Grant the bot administrator permissions (delete message, ban user)"
+        - "The bot will start working automatically"
+      basic_features: "*Core Features:*"
+      features:
+        - "Automatically detect spam messages in groups"
+        - "Train the bot to recognize spam"
+        - "View ban statistics"
+      commands_title: "*Command List:*"
+      commands:
+        start: "/start - Start using the bot"
+        markspam: "/markspam - Delete spam messages and restrict users"
+        feedspam: "/feedspam - Submit spam samples for training" 
+        listspam: "/listspam - View list of spam messages"
+        listbanuser: "/listbanuser - List all banned users"
+        setlang: "/setlang `<language_code>` - Set language for the bot"
+    setlang:
+      deprecation_message: "Setting the language via command is deprecated. Please use the /settings command to open the settings panel and configure the language."
+      usage: "Usage: /setlang <language_code>. Available: %{available_locales}"
+      success: "✅ Language for this group set to: %{language}"
+      failure: "❌ Failed to set language for this group."
+      unsupported_language: "❌ Unsupported language: %{language}. Available: %{available_locales}"
+      general_error: "❌ An unexpected error occurred while setting the language."
+    errors:
+      processing: "An error occurred while processing your request."
+    markspam:
+      success_message: "✅ User @[%{banned_user_name}](tg://user?id=%{user_id}) has been banned and the message marked as spam."
+      delete_message_only_success_message: "✅ Message from user @[%{banned_user_name}](tg://user?id=%{user_id}) has been marked as spam."
+      insufficient_permission_to_delete_message: "❌ Insufficient permission to delete message."
+      failure_message: "❌ Failed to process the spam marking request."
+    feedspam:
+      help_message: "Please provide the spam message text after the command. Examples: `/feedspam FREE IPHONE`"
+      success_message: "✅ Got it. I've learned from that spam message:\n\n`%{preview}`"
+      failure_message: "❌ Failed to process the spam training request."
+      reply_prompt: "/feedspam: Please reply to the this message with the spam you want to feed"
+      input_field_placeholder: "Please type the spam message you want to feed"
+    unban:
+      already_unbanned_message: "✅User already has been unbanned"
+      success_message: "✅ User @[%{user_name}](tg://user?id=%{user_id}) has been unbanned and their messages marked as ham."
+      failure_message: "❌ Failed to unban user."
+    markasham:
+      success_message: "✅ Message from user @[%{user_name}](tg://user?id=%{user_id}) has been marked as ham."
+      failure_message: "❌ Failed to mark message as ham."
+    is_admin:
+      error_message: "❌ You(@[%{user_name}](tg://user?id=%{user_id})) are not an administrator of this group"
+      general_error_message: "❌ You are not an administrator of this group"
+    listbanuser:
+      banned_user_text: "Banned Users"
+      page_text: "Page"
+      total_banned_user: "Total banned users"
+      user_text: "User"
+      message_text: "Message"
+      banned_text: "Banned at"
+      no_banned_user_message: "There is no banned users in this group"
+      no_banned_on_page_x_message: "No banned users found on page %{page} for group `%{group_title}`. Try `/listbanuser %{target_group_id} 1` to see the first page."
+      unban_message: "Unban"
+      failure_message: "❌ Failed to retrieve banned users list."
+      previous_page: "⬅️ Previous"
+      next_page: "Next ➡️"
+    listspam:
+      spam_message_text: "Spam Messages"
+      page_text: "Page"
+      total_spam_message_text: "Total spam messages"
+      user_text: "User"
+      message_text: "Message"
+      spamtype_text: "SpamType"
+      banned_text: "Banned"
+      no_spam_message: "There is no spam message in this group"
+      no_spam_on_page_x_message: "No spam found on page %{page} for group `%{group_title}`. Try `/listspam %{target_group_id} 1` to see the first page."
+      mark_as_ham_message: "Not Spam"
+      failure_message: "❌ Failed to retrieve spam list."
+      previous_page: "⬅️ Previous"
+      next_page: "Next ➡️"
+    handle_callback:
+      error_message: "❌ An error occurred while processing your request."
+    is_group_chat:
+      error_message: "❌ Current chat is not a group chat" 
+    handle_regular_message:
+      alert_message: "⚠️ Potential spam from @[%{user_name}](tg://user?id=%{user_id}) was automatically removed. (This message will be deleted in %{delete_message_delay} mins.)" 
+      ban_user_message: "✅ User @[%{user_name}](tg://user?id=%{user_id}) has been banned from this group for repeated spam."
+      global_ban_user_message: "✅ User @[%{user_name}](tg://user?id=%{user_id}) has been banned across all groups using this bot for repeated spam."
+      
+      
