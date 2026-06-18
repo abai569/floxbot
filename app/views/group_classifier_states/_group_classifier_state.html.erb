@@ -1,42 +1,42 @@
 <div id="<%= dom_id group_classifier_state %>" class="w-full sm:w-auto my-5 space-y-5">
   <div>
-    <strong class="block font-medium mb-1">Group Id:</strong>
+    <strong class="block font-medium mb-1"><%= t('.group_id') %>:</strong>
     <%= group_classifier_state.group_id %>
   </div>
   <div>
-    <strong class="block font-medium mb-1">Group name:</strong>
+    <strong class="block font-medium mb-1"><%= t('.group_name') %>:</strong>
     <%= group_classifier_state.group_name %>
   </div>
   <div>
-    <strong class="block font-medium mb-1">Spam counts:</strong>
+    <strong class="block font-medium mb-1"><%= t('.spam_counts') %>:</strong>
     <%= JSON.pretty_generate(group_classifier_state.spam_counts) %>
   </div>
   <div>
-    <strong class="block font-medium mb-1">Ham counts:</strong>
+    <strong class="block font-medium mb-1"><%= t('.ham_counts') %>:</strong>
     <%= JSON.pretty_generate(group_classifier_state.ham_counts) %>
   </div>
   <div>
-    <strong class="block font-medium mb-1">Total spam words:</strong>
+    <strong class="block font-medium mb-1"><%= t('.total_spam_words') %>:</strong>
     <%= group_classifier_state.total_spam_words %>
   </div>
   <div>
-    <strong class="block font-medium mb-1">Total ham words:</strong>
+    <strong class="block font-medium mb-1"><%= t('.total_ham_words') %>:</strong>
     <%= group_classifier_state.total_ham_words %>
   </div>
   <div>
-    <strong class="block font-medium mb-1">Total spam messages:</strong>
+    <strong class="block font-medium mb-1"><%= t('.total_spam_messages') %>:</strong>
     <%= group_classifier_state.total_spam_messages %>
   </div>
   <div>
-    <strong class="block font-medium mb-1">Total ham messages:</strong>
+    <strong class="block font-medium mb-1"><%= t('.total_ham_messages') %>:</strong>
     <%= group_classifier_state.total_ham_messages %>
   </div>
   <div>
-    <strong class="block font-medium mb-1">Vocabulary size:</strong>
+    <strong class="block font-medium mb-1"><%= t('.vocabulary_size') %>:</strong>
     <%= group_classifier_state.vocabulary_size %>
   </div>
   <div>
-    <strong class="block font-medium mb-1">Created at:</strong>
+    <strong class="block font-medium mb-1"><%= t('.created_at') %>:</strong>
     <%= group_classifier_state.created_at.strftime("%Y-%m-%d %H:%M") %>
   </div>
 </div>

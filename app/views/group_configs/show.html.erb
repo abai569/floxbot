@@ -1,56 +1,56 @@
-<% content_for :title, "Group Config" %>
+<% content_for :title, t('.title', group: @group_config.group_name || @group_config.group_id) %>
 
 <div class="md:w-2/3 w-full">
-  <h1 class="font-bold text-4xl">Group Config: <%= @group_config.group_name || @group_config.group_id %></h1>
+  <h1 class="font-bold text-4xl"><%= t('.title', group: @group_config.group_name || @group_config.group_id) %></h1>
 
   <div class="w-full my-5 space-y-5">
     <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-      <h2 class="text-xl font-bold mb-4">Verification</h2>
+      <h2 class="text-xl font-bold mb-4"><%= t('.verification') %></h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <strong class="block font-medium mb-1">Mode:</strong>
+          <strong class="block font-medium mb-1"><%= t('.mode') %>:</strong>
           <%= @group_config.verification_mode.humanize %>
         </div>
         <div>
-          <strong class="block font-medium mb-1">Timeout:</strong>
-          <%= @group_config.verification_timeout %> seconds
+          <strong class="block font-medium mb-1"><%= t('.timeout') %>:</strong>
+          <%= @group_config.verification_timeout %><%= t('.seconds') %>
         </div>
       </div>
     </div>
 
     <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-      <h2 class="text-xl font-bold mb-4">Welcome Message</h2>
+      <h2 class="text-xl font-bold mb-4"><%= t('.welcome_message') %></h2>
       <div class="space-y-3">
         <div>
-          <strong class="block font-medium mb-1">Text:</strong>
+          <strong class="block font-medium mb-1"><%= t('.text') %>:</strong>
           <div class="bg-gray-50 p-3 rounded whitespace-pre-wrap"><%= @group_config.welcome_text.presence || "—" %></div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <strong class="block font-medium mb-1">Photo:</strong>
+            <strong class="block font-medium mb-1"><%= t('.photo') %>:</strong>
             <%= @group_config.welcome_photo_id.presence || "—" %>
           </div>
           <div>
-            <strong class="block font-medium mb-1">Video:</strong>
+            <strong class="block font-medium mb-1"><%= t('.video') %>:</strong>
             <%= @group_config.welcome_video_id.presence || "—" %>
           </div>
         </div>
         <div>
-          <strong class="block font-medium mb-1">Buttons:</strong>
+          <strong class="block font-medium mb-1"><%= t('.buttons') %>:</strong>
           <pre class="bg-gray-50 p-3 rounded text-sm"><%= JSON.pretty_generate(@group_config.welcome_buttons) rescue @group_config.welcome_buttons_json %></pre>
         </div>
       </div>
     </div>
 
     <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-      <h2 class="text-xl font-bold mb-4">Cleanup Settings</h2>
+      <h2 class="text-xl font-bold mb-4"><%= t('.cleanup_settings') %></h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div><strong>Del Forward:</strong> <%= check_mark(@group_config.del_forward?) %></div>
-        <div><strong>Del Keyword:</strong> <%= check_mark(@group_config.del_keyword?) %></div>
+        <div><strong><%= t('.del_forward') %>:</strong> <%= check_mark(@group_config.del_forward?) %></div>
+        <div><strong><%= t('.del_keyword') %>:</strong> <%= check_mark(@group_config.del_keyword?) %></div>
       </div>
     </div>
   </div>
 
-  <%= link_to "Edit", edit_group_config_path(@group_config), class: "rounded-lg px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <%= link_to "Back", group_configs_path(index_params), class: "ml-2 rounded-lg px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+  <%= link_to t('.edit_link'), edit_group_config_path(@group_config), class: "rounded-lg px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+  <%= link_to t('.back_link'), group_configs_path(index_params), class: "ml-2 rounded-lg px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
 </div>

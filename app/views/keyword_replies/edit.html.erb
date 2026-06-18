@@ -1,8 +1,8 @@
-<% content_for :title, "Editing keyword reply" %>
+<% content_for :title, t('.title') %>
 
-<h1 class="font-bold text-4xl mb-6">Editing keyword reply</h1>
+<h1 class="font-bold text-4xl mb-6"><%= t('.title') %></h1>
 
 <%= render "form", keyword_reply: @keyword_reply %>
 
-<%= link_to "Show", @keyword_reply, class: "ml-2 rounded-lg px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-<%= link_to "Back", keyword_replies_path, class: "ml-2 rounded-lg px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+<%= link_to t('.show_link'), @keyword_reply, class: "ml-2 rounded-lg px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+<%= link_to t('.back_link'), keyword_replies_path, class: "ml-2 rounded-lg px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>

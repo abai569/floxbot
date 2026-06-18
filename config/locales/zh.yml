@@ -1,4 +1,5 @@
 zh:
+  # === Telegram Bot Messages (existing) ===
   telegram_bot:
     settings:
       open_instructions: "Click the button below to open the settings panel for this group."
@@ -21,7 +22,7 @@ zh:
       basic_features: "*基本功能：*"
       features:
         - "自动检测群组中的垃圾信息"
-        - "训练机器人识别垃圾信息" 
+        - "训练机器人识别垃圾信息"
         - "查看封禁统计数据"
       commands_title: "*命令列表：*"
       commands:
@@ -91,8 +92,465 @@ zh:
     handle_callback:
       error_message: "❌ 处理消息异常"
     is_group_chat:
-      error_message: "❌ 当前聊天不是群组" 
+      error_message: "❌ 当前聊天不是群组"
     handle_regular_message:
-      alert_message: "⚠️ 已自动删除检来自 @[%{user_name}](tg://user?id=%{user_id})的广告（此消息%{delete_message_delay}分钟内会自动删除）" 
+      alert_message: "⚠️ 已自动删除检来自 @[%{user_name}](tg://user?id=%{user_id})的广告（此消息%{delete_message_delay}分钟内会自动删除）"
       ban_user_message: "✅ 用户 @[%{user_name}](tg://user?id=%{user_id}) 因发送垃圾广告已被封禁。"
       global_ban_user_message: "✅ 用户 @[%{user_name}](tg://user?id=%{user_id}) 因发送垃圾广告已在所有群组封禁。"
+
+  # === Web Admin Panel Translations ===
+  layout:
+    brand: "FloBot 管理面板"
+    trained_messages: "训练消息"
+    group_classifiers: "群组分类器"
+    banned_users: "封禁用户"
+    tokenization_samples: "分词样本"
+    group_configs: "群组配置"
+    keywords: "关键字回复"
+    mission_control: "任务管理"
+
+  trained_messages:
+    index:
+      title: "训练消息"
+      showing: "共 %{total} 条，当前显示 %{start} - %{end} 条"
+      new_button: "新增训练消息"
+      search_placeholder: "搜索消息..."
+      message_type: "消息类型"
+      all_types: "全部类型"
+      training_target: "训练目标"
+      all_targets: "全部目标"
+      source: "来源"
+      all_sources: "全部来源"
+      marked_by: "标记者"
+      all_markers: "全部标记者"
+      group: "群组"
+      all_groups: "全部群组"
+      per_page: "每页"
+      apply_filters: "应用筛选"
+      clear_filters: "清除筛选"
+      with_selected: "已选择:"
+      selected: "条"
+      mark_as_spam: "标记为广告"
+      mark_as_ham: "标记为正常"
+      columns:
+        id: "ID"
+        message: "消息"
+        target: "目标"
+        type: "类型"
+        sender: "发送者"
+        marked_by: "标记者"
+        group: "群组"
+        updated: "更新时间"
+        actions: "操作"
+      actions:
+        view: "查看"
+        edit: "编辑"
+        delete: "删除"
+      confirm: "确定要删除吗？"
+      no_results: "没有找到匹配的训练消息。"
+      previous: "上一页"
+      next: "下一页"
+      showing_range: "第 %{start} - %{end} 条，共 %{total} 条结果"
+    show:
+      title: "查看训练消息"
+      edit_link: "编辑此条训练消息"
+      back_link: "返回训练消息列表"
+      delete_link: "删除此条训练消息"
+    new:
+      title: "新增训练消息"
+      back_link: "返回训练消息列表"
+    edit:
+      title: "编辑训练消息"
+      show_link: "查看此条训练消息"
+      back_link: "返回训练消息列表"
+    form:
+      error_header: "以下问题导致此训练消息无法保存："
+      labels:
+        group_id: "群组 ID"
+        message: "消息内容"
+        message_type: "消息类型"
+        training_target: "训练目标"
+        source: "来源"
+        marked_by: "标记者"
+        sender_chat_id: "发送者 ID"
+      placeholders:
+        message_type: "请选择消息类型"
+        training_target: "请选择训练目标"
+        source: "请选择来源"
+        marked_by: "请选择标记者"
+      options:
+        spam: "广告"
+        ham: "正常"
+        untrained: "未训练"
+        chat: "聊天消息"
+        feedspam: "投喂命令"
+        import: "导入"
+        admin_dashboard: "管理面板"
+        auto_sync: "自动同步"
+        not_marked_yet: "未标记"
+        group_admin: "群管理员"
+        message_content: "消息内容"
+        username: "用户名"
+    trained_message:
+      group: "群组"
+      group_name: "群组名称"
+      message: "消息"
+      message_type: "消息类型"
+      telegram_message_id: "Telegram 消息 ID"
+      message_hash: "消息哈希"
+      training_target: "训练目标"
+      source: "来源"
+      marked_by: "标记者"
+      sender_chat_id: "发送者 ID"
+      sender_user_name: "发送者用户名"
+      created_at: "创建时间"
+      unknown: "未知"
+      admin_imported: "管理员导入"
+
+  banned_users:
+    index:
+      title: "封禁用户"
+      showing: "共 %{total} 人，当前显示 %{start} - %{end} 人"
+      new_button: "新增封禁用户"
+      columns:
+        id: "ID"
+        group: "群组"
+        sender_user_id: "发送者 ID"
+        sender_user_name: "发送者用户名"
+        spam_message: "广告消息"
+        created: "创建时间"
+        actions: "操作"
+      actions:
+        view: "查看"
+        edit: "编辑"
+        delete: "删除"
+      confirm: "确定要删除吗？"
+      no_results: "没有找到匹配的封禁用户。"
+      previous: "上一页"
+      next: "下一页"
+      showing_range: "第 %{start} - %{end} 条，共 %{total} 条结果"
+      private: "私聊"
+      page: "第 %{page} 页"
+      total_results: "条记录"
+    show:
+      title: "查看封禁用户"
+      edit_link: "编辑此封禁用户"
+      back_link: "返回封禁用户列表"
+      delete_link: "删除此封禁用户"
+      confirm: "确定要删除吗？"
+    new:
+      title: "新增封禁用户"
+      back_link: "返回封禁用户列表"
+    edit:
+      title: "编辑封禁用户"
+      show_link: "查看此封禁用户"
+      back_link: "返回封禁用户列表"
+    form:
+      error_header: "以下问题导致此封禁用户无法保存："
+      error_label: "个错误"
+      labels:
+        group_id: "群组 ID"
+        sender_chat_id: "发送者 ID"
+        sender_user_name: "发送者用户名"
+        spam_message: "广告消息"
+    banned_user:
+      group_id: "群组 ID"
+      group_name: "群组名称"
+      sender_chat: "发送者 ID"
+      sender_user_name: "发送者用户名"
+      spam_message: "广告消息"
+      message_id: "消息 ID"
+      created_at: "创建时间"
+
+  group_classifier_states:
+    index:
+      title: "群组分类器"
+      showing: "共 %{total} 个分类器，当前显示 %{start} - %{end} 个"
+      new_button: "新增群组分类器"
+      columns:
+        id: "ID"
+        group: "群组"
+        spam_words_count: "广告词数"
+        ham_words_count: "正常词数"
+        total_spam_messages: "总广告消息数"
+        total_ham_messages: "总正常消息数"
+        vocabulary_size: "词汇量"
+        created: "创建时间"
+        updated: "更新时间"
+        actions: "操作"
+      actions:
+        view: "查看"
+        edit: "编辑"
+        delete: "删除"
+      confirm: "确定要删除吗？"
+      no_results: "没有找到匹配的群组分类器。"
+      previous: "上一页"
+      next: "下一页"
+      showing_range: "第 %{start} - %{end} 条，共 %{total} 条结果"
+      private: "私聊"
+      page: "第 %{page} 页"
+      total_results: "条记录"
+    show:
+      title: "查看群组分类器"
+      basic_info: "基本信息"
+      group_id: "群组 ID"
+      group_name: "群组名称"
+      total_spam_messages: "总广告消息数"
+      total_ham_messages: "总正常消息数"
+      classifier_summary: "分类器摘要"
+      total_vocabulary: "总词汇量"
+      total_spam_words: "广告词总数"
+      total_ham_words: "正常词总数"
+      top_words_analysis: "高频词分析"
+      select_count: "选择显示的高频词数量 (5-50):"
+      update_button: "更新"
+      top_spam_words: "Top %{count} 广告词"
+      top_ham_words: "Top %{count} 正常词"
+      columns:
+        rank: "排名"
+        word: "词语"
+        count: "次数"
+      edit_link: "编辑此分类器"
+      back_link: "返回群组分类器列表"
+      delete_link: "删除此分类器"
+      confirm: "确定要删除吗？"
+    new:
+      title: "新增群组分类器"
+      back_link: "返回群组分类器列表"
+    edit:
+      title: "编辑群组分类器"
+      show_link: "查看此分类器"
+      back_link: "返回群组分类器列表"
+    form:
+      error_header: "以下问题导致此分类器无法保存："
+      error_label: "个错误"
+      labels:
+        group_id: "群组 ID"
+        spam_counts: "广告词频次 (JSON)"
+        ham_counts: "正常词频次 (JSON)"
+        total_spam_words: "广告词总数"
+        total_ham_words: "正常词总数"
+        total_spam_messages: "总广告消息数"
+        total_ham_messages: "总正常消息数"
+        vocabulary_size: "词汇量"
+    classifier_state:
+      group_id: "群组 ID"
+      group_name: "群组名称"
+      spam_counts: "广告词频次"
+      ham_counts: "正常词频次"
+      total_spam_words: "广告词总数"
+      total_ham_words: "正常词总数"
+      total_spam_messages: "总广告消息数"
+      total_ham_messages: "总正常消息数"
+      vocabulary_size: "词汇量"
+      created_at: "创建时间"
+
+  group_configs:
+    index:
+      title: "群组配置"
+      new_button: "新增群组配置"
+      columns:
+        group: "群组"
+        verify: "验证"
+        welcome: "欢迎"
+        cleanup: "清理"
+        actions: "操作"
+      badges:
+        disabled: "未启用"
+        button: "按钮验证"
+        math: "数学验证"
+        fwd: "删转发"
+        kw: "删关键字"
+      actions:
+        view: "查看"
+        edit: "编辑"
+      previous: "上一页"
+      next: "下一页"
+      showing_range: "第 %{start} - %{end} 条，共 %{total} 条"
+    show:
+      title: "群组配置: %{group}"
+      verification: "入群验证"
+      mode: "模式"
+      timeout: "超时"
+      seconds: "秒"
+      welcome_message: "欢迎消息"
+      text: "文字"
+      photo: "图片"
+      video: "视频"
+      buttons: "按钮"
+      cleanup_settings: "消息清理"
+      del_forward: "删除转发"
+      del_keyword: "删除关键字触发"
+      edit_link: "编辑"
+      back_link: "返回"
+    new:
+      title: "新增群组配置"
+      back_link: "返回"
+    edit:
+      title: "编辑群组配置"
+      show_link: "查看"
+      back_link: "返回"
+    form:
+      error_header: "以下问题导致此群组配置无法保存："
+      verification: "入群验证"
+      labels:
+        group_id: "群组 ID"
+        verification_mode: "验证模式"
+        verification_timeout: "超时时间（秒）"
+      verification_modes:
+        none: "不验证"
+        button: "按钮验证"
+        math: "数学验证"
+      welcome: "欢迎消息"
+      welcome_text: "欢迎文字（支持 {name}, {title} 变量）"
+      welcome_photo: "欢迎图片 file_id"
+      welcome_video: "欢迎视频 file_id"
+      welcome_buttons: "欢迎按钮（JSON 数组: [{\"text\": \"按钮文字\", \"url\": \"链接\"}]）"
+      cleanup: "消息清理"
+      del_forward: "删除转发消息"
+      del_keyword: "删除关键字触发消息"
+
+  keyword_replies:
+    index:
+      title: "关键字回复"
+      new_button: "新增关键字回复"
+      filter_group: "全部群组"
+      filter_button: "筛选"
+      columns:
+        group: "群组"
+        keyword: "关键字"
+        match: "匹配"
+        reply: "回复"
+        actions: "操作"
+      match_modes:
+        exact: "精确"
+        regex: "正则"
+        include: "包含"
+      actions:
+        view: "查看"
+        edit: "编辑"
+        delete: "删除"
+      confirm: "确定要删除吗？"
+      no_results: "没有找到匹配的关键字回复。"
+      previous: "上一页"
+      next: "下一页"
+      showing_range: "第 %{start} - %{end} 条，共 %{total} 条"
+    show:
+      title: "查看关键字回复"
+      group_id: "群组 ID"
+      keyword: "关键字"
+      match_mode: "匹配模式"
+      reply_type: "回复类型"
+      reply_content: "回复内容"
+      with_caption: "附带说明"
+      match_modes:
+        exact: "精确"
+        regex: "正则"
+        include: "包含"
+      edit_link: "编辑"
+      back_link: "返回"
+      delete_link: "删除"
+    new:
+      title: "新增关键字回复"
+      back_link: "返回"
+    edit:
+      title: "编辑关键字回复"
+      show_link: "查看"
+      back_link: "返回"
+    form:
+      error_header: "以下问题导致此关键字回复无法保存："
+      labels:
+        group_id: "群组 ID"
+        keyword: "关键字"
+        reply_type: "回复类型"
+        is_exact: "精确匹配"
+        is_regex: "正则匹配"
+        reply_content: "回复内容（文字 或 图片/视频 file_id）"
+        caption: "附带说明（图片/视频回复时使用）"
+      reply_types:
+        text: "文字"
+        photo: "图片"
+        video: "视频"
+
+  tokenization_samples:
+    new:
+      title: "分词样本"
+      get_samples: "获取更多随机样本"
+      sample: "样本 %{number}"
+      original_message: "原始消息"
+      cleaned_message: "清洗后消息"
+      tokens: "分词结果"
+      no_data: "数据库中暂无训练消息。"
+
+  # === Login Page ===
+  sessions:
+    new:
+      title: "登录"
+      heading: "FloBot 管理面板"
+      username: "用户名"
+      password: "密码"
+      submit: "登录"
+      error: "用户名或密码错误"
+
+  # === Rails Form Helpers ===
+  helpers:
+    submit:
+      trained_message:
+        create: "创建训练消息"
+        update: "更新训练消息"
+      banned_user:
+        create: "创建封禁用户"
+        update: "更新封禁用户"
+      group_classifier_state:
+        create: "创建分类器"
+        update: "更新分类器"
+      group_config:
+        create: "创建群组配置"
+        update: "更新群组配置"
+      keyword_reply:
+        create: "创建关键字回复"
+        update: "更新关键字回复"
+
+  # === ActiveRecord Attribute Names ===
+  activerecord:
+    attributes:
+      trained_message:
+        group_id: "群组 ID"
+        message: "消息内容"
+        message_type: "消息类型"
+        training_target: "训练目标"
+        source: "来源"
+        marked_by: "标记者"
+        sender_chat_id: "发送者 ID"
+      banned_user:
+        group_id: "群组 ID"
+        sender_chat_id: "发送者 ID"
+        sender_user_name: "发送者用户名"
+        spam_message: "广告消息"
+      group_classifier_state:
+        group_id: "群组 ID"
+        spam_counts: "广告词频次"
+        ham_counts: "正常词频次"
+        total_spam_words: "广告词总数"
+        total_ham_words: "正常词总数"
+        total_spam_messages: "总广告消息数"
+        total_ham_messages: "总正常消息数"
+        vocabulary_size: "词汇量"
+      group_config:
+        group_id: "群组 ID"
+        verification_mode: "验证模式"
+        verification_timeout: "超时时间"
+        welcome_text: "欢迎文字"
+        welcome_photo_id: "欢迎图片"
+        welcome_video_id: "欢迎视频"
+        welcome_buttons_json: "欢迎按钮"
+        del_forward: "删除转发"
+        del_keyword: "删除关键字"
+      keyword_reply:
+        group_id: "群组 ID"
+        keyword: "关键字"
+        reply_type: "回复类型"
+        reply_content: "回复内容"
+        is_exact: "精确匹配"
+        is_regex: "正则匹配"
+        caption: "附带说明"

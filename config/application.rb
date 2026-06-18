@@ -34,5 +34,6 @@ module TelegramSpamSniperBot
     config.probability_threshold = 0.94
     config.chinese_space_spam_threshold = 0.8
     config.short_message_word_threshold = 3
+    config.i18n.default_locale = :zh
   end
 end

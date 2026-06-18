@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Telegram Spam Sniper Bot" %></title>
+    <title><%= content_for(:title) || t('layout.brand') %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -27,7 +27,7 @@
             <!-- Logo/Brand -->
             <div class="flex-shrink-0 flex items-center">
               <%= link_to root_path, class: "text-xl font-bold text-gray-800 hover:text-gray-600" do %>
-                🔫 Telegram Spam Sniper
+                <%= t('layout.brand') %>
               <% end %>
 
               <% unless Rails.env.production? %>
@@ -39,21 +39,21 @@
             
             <!-- Navigation Links -->
             <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                <%= link_to "Trained Messages", trained_messages_path, 
+                <%= link_to t('layout.trained_messages'), trained_messages_path, 
                 class: "#{current_page?(trained_messages_path) ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
                 
-                <%= link_to "Group Classifiers", group_classifier_states_path, 
+                <%= link_to t('layout.group_classifiers'), group_classifier_states_path, 
                 class: "#{current_page?(group_classifier_states_path) ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
                 
-                <%= link_to "Banned Users", banned_users_path, 
+                <%= link_to t('layout.banned_users'), banned_users_path, 
                 class: "#{current_page?(banned_users_path) ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
-                <%= link_to "Tokenization Samples", new_tokenization_sample_path, 
+                <%= link_to t('layout.tokenization_samples'), new_tokenization_sample_path, 
                 class: "#{current_page?(new_tokenization_sample_path) ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
-                <%= link_to "Group Configs", group_configs_path,
+                <%= link_to t('layout.group_configs'), group_configs_path,
                 class: "#{current_page?(group_configs_path) ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
-                <%= link_to "Keywords", keyword_replies_path,
+                <%= link_to t('layout.keywords'), keyword_replies_path,
                 class: "#{current_page?(keyword_replies_path) ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
-                <%= link_to "Mission Control Jobs", mission_control_jobs_path,
+                <%= link_to t('layout.mission_control'), mission_control_jobs_path,
                 class: "#{current_page?(mission_control_jobs_path) ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
             </div>
           </div>

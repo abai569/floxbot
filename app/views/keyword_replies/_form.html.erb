@@ -1,7 +1,7 @@
 <%= form_with(model: keyword_reply, class: "contents") do |form| %>
   <% if keyword_reply.errors.any? %>
     <div class="bg-red-50 text-red-500 px-4 py-3 rounded mb-5">
-      <h2><%= pluralize(keyword_reply.errors.count, "error") %> prohibited this keyword reply from being saved:</h2>
+      <h2><%= t('.error_header') %></h2>
       <ul class="list-disc ml-4 mt-2">
         <% keyword_reply.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -26,30 +26,30 @@
       <div>
         <%= form.label :reply_type, class: "block text-sm font-medium text-gray-700 mb-1" %>
         <%= form.select :reply_type,
-            options_for_select([["Text", "text"], ["Photo", "photo"], ["Video", "video"]], keyword_reply.reply_type),
+            options_for_select([[t('.reply_types.text'), "text"], [t('.reply_types.photo'), "photo"], [t('.reply_types.video'), "video"]], keyword_reply.reply_type),
             {}, class: "w-full rounded-lg border-gray-300 shadow-sm py-2 px-3" %>
       </div>
       <div>
         <%= form.label :is_exact, class: "flex items-center space-x-2 pt-5" do %>
           <%= form.check_box :is_exact, class: "rounded border-gray-300" %>
-          <span>Exact match</span>
+          <span><%= t('.labels.is_exact') %></span>
         <% end %>
       </div>
       <div>
         <%= form.label :is_regex, class: "flex items-center space-x-2 pt-5" do %>
           <%= form.check_box :is_regex, class: "rounded border-gray-300" %>
-          <span>Regex match</span>
+          <span><%= t('.labels.is_regex') %></span>
         <% end %>
       </div>
     </div>
 
     <div>
-      <%= form.label :reply_content, "Reply content (text / file_id for photo/video)", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.label :reply_content, t('.labels.reply_content'), class: "block text-sm font-medium text-gray-700 mb-1" %>
       <%= form.text_area :reply_content, rows: 3, class: "w-full rounded-lg border-gray-300 shadow-sm py-2 px-3" %>
     </div>
 
     <div>
-      <%= form.label :reply_text, "Caption (for photo/video replies)", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.label :reply_text, t('.labels.caption'), class: "block text-sm font-medium text-gray-700 mb-1" %>
       <%= form.text_area :reply_text, rows: 2, class: "w-full rounded-lg border-gray-300 shadow-sm py-2 px-3" %>
     </div>
 
