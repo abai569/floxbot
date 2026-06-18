@@ -33,11 +33,6 @@ module TelegramSpamSniperBot
     # Spam blocked probability threshold
     config.probability_threshold = 0.94
     config.chinese_space_spam_threshold = 0.8
-    # It should skip inspecting for messages sent on behalf of a channel (channel broadcasts)
-    # But these blacklist groups already utilize this bot to inspect channel
-    # broadcast message (I know, strange usecase), so inspect message
-    # from these group as before
-    config.channel_broadcast_blacklist = [ -1002133460865, -1002118991610 ]
     config.short_message_word_threshold = 3
   end
 end
