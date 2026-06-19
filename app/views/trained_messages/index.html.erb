@@ -104,11 +104,11 @@
     <% end %>
 
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
-      <div class="flex items-center space-x-3">
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
         <span class="text-sm font-medium text-gray-700"><%= t('.with_selected') %></span>
         <div class="flex space-x-2">
-          <%= form.submit t('.mark_as_spam'), class: "rounded-lg px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 font-medium cursor-pointer transition-colors duration-150" %>
-          <%= form.submit t('.mark_as_ham'), class: "rounded-lg px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 font-medium cursor-pointer transition-colors duration-150" %>
+          <%= form.submit t('.mark_as_spam'), class: "flex-1 sm:flex-none rounded-lg px-4 py-2.5 sm:py-2 bg-red-100 hover:bg-red-200 text-red-700 text-sm font-medium cursor-pointer transition-colors duration-150" %>
+          <%= form.submit t('.mark_as_ham'), class: "flex-1 sm:flex-none rounded-lg px-4 py-2.5 sm:py-2 bg-green-100 hover:bg-green-200 text-green-700 text-sm font-medium cursor-pointer transition-colors duration-150" %>
         </div>
       </div>
       <div class="text-sm text-gray-500">
@@ -116,7 +116,8 @@
       </div>
     </div>
 
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <!-- Desktop Table -->
+    <div class="hidden sm:block bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
@@ -151,7 +152,7 @@
                   <% end %>
                 <% end %>
               </th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
+              <th scope="col" class="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
                 <%= link_to trained_messages_path(params.permit!.merge(sort: 'sender_user_name', direction: params[:sort] == 'sender_user_name' && params[:direction] == 'asc' ? 'desc' : 'asc')), class: "hover:text-gray-700 flex items-center space-x-1" do %>
                   <span><%= t('.columns.sender') %></span>
                   <% if params[:sort] == 'sender_user_name' %>
@@ -159,10 +160,10 @@
                   <% end %>
                 <% end %>
               </th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
+              <th scope="col" class="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
                 <%= t('.columns.marked_by') %>
               </th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
+              <th scope="col" class="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
                 <%= link_to trained_messages_path(params.permit!.merge(sort: 'group_name', direction: params[:sort] == 'group_name' && params[:direction] == 'asc' ? 'desc' : 'asc')), class: "hover:text-gray-700 flex items-center space-x-1" do %>
                   <span><%= t('.columns.group') %></span>
                   <% if params[:sort] == 'group_name' %>
@@ -170,7 +171,7 @@
                   <% end %>
                 <% end %>
               </th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
+              <th scope="col" class="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
                 <%= link_to trained_messages_path(params.permit!.merge(sort: 'updated_at', direction: params[:sort] == 'updated_at' && params[:direction] == 'asc' ? 'desc' : 'asc')), class: "hover:text-gray-700 flex items-center space-x-1" do %>
                   <span><%= t('.columns.updated') %></span>
                   <% if params[:sort] == 'updated_at' %>
@@ -212,19 +213,19 @@
                   <td class="px-6 py-4 whitespace-nowrap text-sm <%= message_type_classes(trained_message.message_type) %>">
                     <%= trained_message.message_type&.humanize || t('.unknown') %>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" title="<%= trained_message.sender_user_name %>">
+                  <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500" title="<%= trained_message.sender_user_name %>">
                     <%= truncate(trained_message.sender_user_name, length: 20) || t('.admin_imported') %>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td class="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= marked_by_classes(trained_message.marked_by) %>">
                       <%= trained_message.marked_by&.humanize || t('.unknown') %>
                     </span>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td class="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <%= trained_message.group_name || t('.imported') %>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <%= time_ago_in_words(trained_message.updated_at) %> <%= t('.ago') %>
+                  <td class="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= display_time_ago(trained_message.updated_at) %>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div class="flex items-center justify-end space-x-2">
@@ -252,6 +253,60 @@
           </tbody>
         </table>
       </div>
+    </div>
+
+    <!-- Mobile Cards -->
+    <div class="block sm:hidden space-y-3">
+      <% if !@trained_messages.empty? %>
+        <% @trained_messages.each do |trained_message| %>
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <div class="flex items-start justify-between mb-2">
+              <div class="flex items-center space-x-2">
+                <input type="checkbox" name="trained_message_ids[]" value="<%= trained_message.id %>" data-checkbox-select-all-target="child" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                <span class="text-xs text-gray-400">#<%= trained_message.id %></span>
+              </div>
+              <div class="flex items-center space-x-1.5">
+                <% if trained_message.training_target %>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium <%= training_target_classes(trained_message.training_target) %>">
+                    <%= trained_message.training_target.humanize %>
+                  </span>
+                <% end %>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium <%= message_type_classes(trained_message.message_type) %>">
+                  <%= trained_message.message_type&.humanize || t('.unknown') %>
+                </span>
+              </div>
+            </div>
+
+            <div class="text-sm text-gray-900 mb-2 line-clamp-2" title="<%= extract_message_content(trained_message.message) %>">
+              <%= truncate(extract_message_content(trained_message.message), length: 80) %>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500 mb-3">
+              <span><%= t('.columns.sender') %>: <%= truncate(trained_message.sender_user_name, length: 15) || t('.admin_imported') %></span>
+              <span><%= t('.columns.group') %>: <%= trained_message.group_name || t('.imported') %></span>
+              <span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium <%= marked_by_classes(trained_message.marked_by) %>">
+                <%= trained_message.marked_by&.humanize || t('.unknown') %>
+              </span>
+              <span><%= display_time_ago(trained_message.updated_at) %></span>
+            </div>
+
+            <div class="flex items-center space-x-3 pt-2 border-t border-gray-100">
+              <%= link_to t('.actions.view'), trained_message_path(trained_message, request.query_parameters), class: "text-xs text-indigo-600 hover:text-indigo-900 font-medium" %>
+              <%= link_to t('.actions.edit'), edit_trained_message_path(trained_message), class: "text-xs text-indigo-600 hover:text-indigo-900 font-medium" %>
+              <%= link_to t('.actions.delete'), trained_message_path(trained_message, return_url: request.original_url), method: :delete,
+                  class: "text-xs text-red-600 hover:text-red-900 font-medium",
+                  data: { turbo_confirm: t('.confirm') } %>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center text-gray-500">
+          <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <p><%= t('.no_results') %></p>
+        </div>
+      <% end %>
     </div>
   <% end %>
 

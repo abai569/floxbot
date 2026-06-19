@@ -22,4 +22,10 @@ module ApplicationHelper
       "bg-gray-100 text-gray-800"
     end
   end
+
+  def display_time_ago(time)
+    return "—" unless time
+    time_tag = time_ago_in_words(time)
+    t("time_ago_suffix", time: time_tag)
+  end
 end

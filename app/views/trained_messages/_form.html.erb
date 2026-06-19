@@ -11,54 +11,56 @@
     </div>
   <% end %>
 
-  <div class="my-5">
-    <%= form.label :group_id %>
-    <%= form.number_field :group_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": trained_message.errors[:group_id].none?, "border-red-400 focus:outline-red-600": trained_message.errors[:group_id].any?}] %>
-  </div>
+  <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 space-y-5">
+    <div>
+      <%= form.label :group_id, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.number_field :group_id, class: ["w-full rounded-lg border px-3 py-2", {"border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500": trained_message.errors[:group_id].none?, "border-red-400 focus:outline-red-600": trained_message.errors[:group_id].any?}] %>
+    </div>
 
-  <div class="my-5">
-    <%= form.label :message %>
-    <%= form.textarea :message, rows: 4, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": trained_message.errors[:message].none?, "border-red-400 focus:outline-red-600": trained_message.errors[:message].any?}] %>
-  </div>
+    <div>
+      <%= form.label :message, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.textarea :message, rows: 4, class: ["w-full rounded-lg border px-3 py-2", {"border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500": trained_message.errors[:message].none?, "border-red-400 focus:outline-red-600": trained_message.errors[:message].any?}] %>
+    </div>
 
-  <div class="my-5">
-    <%= form.label :message_type %>
-    <%= form.select :message_type, 
-          options_for_select([[t('.options.spam'), 'spam'], [t('.options.ham'), 'ham'], [t('.options.untrained'), 'untrained']], @trained_message.message_type), 
-          { prompt: t('.placeholders.message_type') },
-       { class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": trained_message.errors[:message_type].none?, "border-red-400 focus:outline-red-600": trained_message.errors[:message_type].any?}] } %>
-  </div>
+    <div>
+      <%= form.label :message_type, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.select :message_type,
+            options_for_select([[t('.options.spam'), 'spam'], [t('.options.ham'), 'ham'], [t('.options.untrained'), 'untrained']], @trained_message.message_type),
+            { prompt: t('.placeholders.message_type') },
+         { class: ["w-full rounded-lg border px-3 py-2", {"border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500": trained_message.errors[:message_type].none?, "border-red-400 focus:outline-red-600": trained_message.errors[:message_type].any?}] } %>
+    </div>
 
-  <div class="my-5">
-    <%= form.label :training_target %>
-    <%= form.select :training_target, 
-          options_for_select([[t('.options.message_content'), 'message_content'], [t('.options.username'), 'user_name']], @trained_message.training_target), 
-          { prompt: t('.placeholders.training_target') },
-       { class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": trained_message.errors[:training_target].none?, "border-red-400 focus:outline-red-600": trained_message.errors[:training_target].any?}] } %>
-  </div>
+    <div>
+      <%= form.label :training_target, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.select :training_target,
+            options_for_select([[t('.options.message_content'), 'message_content'], [t('.options.username'), 'user_name']], @trained_message.training_target),
+            { prompt: t('.placeholders.training_target') },
+         { class: ["w-full rounded-lg border px-3 py-2", {"border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500": trained_message.errors[:training_target].none?, "border-red-400 focus:outline-red-600": trained_message.errors[:training_target].any?}] } %>
+    </div>
 
-  <div class="my-5">
-    <%= form.label :source %>
-    <%= form.select :source,
-          options_for_select([[t('.options.chat'), 'chat'], [t('.options.feedspam'), 'feedspam_command'], [t('.options.import'), 'import']], @trained_message.source),
-          { prompt: t('.placeholders.source') },
-       { class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": trained_message.errors[:source].none?, "border-red-400 focus:outline-red-600": trained_message.errors[:source].any?}] } %>
-  </div>
+    <div>
+      <%= form.label :source, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.select :source,
+            options_for_select([[t('.options.chat'), 'chat'], [t('.options.feedspam'), 'feedspam_command'], [t('.options.import'), 'import']], @trained_message.source),
+            { prompt: t('.placeholders.source') },
+         { class: ["w-full rounded-lg border px-3 py-2", {"border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500": trained_message.errors[:source].none?, "border-red-400 focus:outline-red-600": trained_message.errors[:source].any?}] } %>
+    </div>
 
-  <div class="my-5">
-      <%= form.label :marked_by %>
-      <%= form.select :marked_by,
-       options_for_select([[t('.options.group_admin'), 'group_admin'], [t('.options.admin_dashboard'), 'admin_dashboard'], [t('.options.auto_sync'), 'auto_sync'], [t('.options.not_marked_yet'), 'not_marked_yet']], @trained_message.marked_by),
-       { prompt: t('.placeholders.marked_by') },
-       { class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": trained_message.errors[:marked_by].none?, "border-red-400 focus:outline-red-600": trained_message.errors[:marked_by].any?}] } %>
-  </div>
+    <div>
+        <%= form.label :marked_by, class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= form.select :marked_by,
+         options_for_select([[t('.options.group_admin'), 'group_admin'], [t('.options.admin_dashboard'), 'admin_dashboard'], [t('.options.auto_sync'), 'auto_sync'], [t('.options.not_marked_yet'), 'not_marked_yet']], @trained_message.marked_by),
+         { prompt: t('.placeholders.marked_by') },
+         { class: ["w-full rounded-lg border px-3 py-2", {"border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500": trained_message.errors[:marked_by].none?, "border-red-400 focus:outline-red-600": trained_message.errors[:marked_by].any?}] } %>
+    </div>
 
-  <div class="my-5">
-    <%= form.label :sender_chat_id %>
-    <%= form.number_field :sender_chat_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": trained_message.errors[:sender_chat_id].none?, "border-red-400 focus:outline-red-600": trained_message.errors[:sender_chat_id].any?}] %>
-  </div>
+    <div>
+      <%= form.label :sender_chat_id, class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.number_field :sender_chat_id, class: ["w-full rounded-lg border px-3 py-2", {"border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500": trained_message.errors[:sender_chat_id].none?, "border-red-400 focus:outline-red-600": trained_message.errors[:sender_chat_id].any?}] %>
+    </div>
 
-  <div class="inline">
-    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+    <div class="pt-2">
+      <%= form.submit class: "w-full sm:w-auto rounded-lg px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium cursor-pointer transition-colors duration-150" %>
+    </div>
   </div>
 <% end %>

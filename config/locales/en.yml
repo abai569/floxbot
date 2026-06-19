@@ -130,3 +130,4 @@ en:
       global_ban_user_message: "✅ User @[%{user_name}](tg://user?id=%{user_id}) has been banned across all groups using this bot for repeated spam."
       
       
+  time_ago_suffix: "%{time} ago"
