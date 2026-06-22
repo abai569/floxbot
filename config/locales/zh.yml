@@ -101,7 +101,9 @@ zh:
       button: "欢迎 %{name}！请点击下方按钮完成验证。"
       math: "欢迎 %{name}！请计算：%{a} %{op} %{b} = ?"
     handle_regular_message:
-      alert_message: "⚠️ 已自动删除检来自 @[%{user_name}](tg://user?id=%{user_id})的广告（此消息%{delete_message_delay}分钟内会自动删除）"
+      alert_message: "⚠️ 已自动删除来自 @[%{user_name}](tg://user?id=%{user_id}) 的广告（此消息%{delete_message_notice}）"
+      delete_after_minutes: "%{minutes}分钟后自动删除"
+      no_auto_delete: "不会自动删除"
       ban_user_message: "✅ 用户 @[%{user_name}](tg://user?id=%{user_id}) 因发送垃圾广告已被封禁。"
       global_ban_user_message: "✅ 用户 @[%{user_name}](tg://user?id=%{user_id}) 因发送垃圾广告已在所有群组封禁。"
 
@@ -388,12 +390,12 @@ zh:
       video: "视频"
       buttons: "按钮"
       cleanup_settings: "消息清理"
-      del_forward: "删除转发"
-      del_keyword: "删除关键字触发"
       edit_link: "编辑"
       back_link: "返回"
-      alert_delete_delay: "⚠️ 警告消息自动删除"
-      keyword_delete_delay: "💬 关键字回复自动删除"
+      alert_delete_delay: "警告消息删除延迟"
+      keyword_delete_delay: "关键字回复删除延迟"
+      forward_delete_delay: "删除转发消息"
+      welcome_delete_delay: "欢迎消息删除延迟"
     new:
       title: "新增群组配置"
       back_link: "返回"
@@ -409,8 +411,10 @@ zh:
         verification_mode: "验证模式"
         verification_timeout: "超时时间（秒）"
         language: "Bot 语言"
-        alert_delete_delay: "警告消息删除延迟（分，0=不删，默认3）"
-        keyword_delete_delay: "关键字回复删除延迟（分，留空=不删）"
+        alert_delete_delay: "警告消息删除延迟（分，0=不删，默认0）"
+        keyword_delete_delay: "关键字回复删除延迟（分，0=不删，默认0）"
+        forward_delete_delay: "删除转发消息（分，0=不删，默认0）"
+        welcome_delete_delay: "欢迎消息删除延迟（分，0=不删，默认0）"
       verification_modes:
         none: "不验证"
         button: "按钮验证"
@@ -425,8 +429,6 @@ zh:
       welcome_video: "欢迎视频 file_id"
       welcome_buttons: "欢迎按钮（JSON 数组: [{\"text\": \"按钮文字\", \"url\": \"链接\"}]）"
       cleanup: "消息清理"
-      del_forward: "删除转发消息"
-      del_keyword: "删除关键字触发消息"
 
   keyword_replies:
     index:

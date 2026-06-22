@@ -50,23 +50,19 @@
 
     <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
       <h2 class="text-xl font-bold mb-4"><%= t('.cleanup_settings') %></h2>
+      <% cleanup_delays = [
+        [t('.alert_delete_delay'), @group_config.alert_delete_delay],
+        [t('.keyword_delete_delay'), @group_config.keyword_delete_delay]
+      ] %>
+      <% cleanup_delays << [t('.forward_delete_delay'), @group_config.forward_delete_delay] if GroupConfig.column_names.include?('forward_delete_delay') %>
+      <% cleanup_delays << [t('.welcome_delete_delay'), @group_config.welcome_delete_delay] if GroupConfig.column_names.include?('welcome_delete_delay') %>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div><strong><%= t('.del_forward') %>:</strong> <%= check_mark(@group_config.del_forward?) %></div>
-        <div><strong><%= t('.del_keyword') %>:</strong> <%= check_mark(@group_config.del_keyword?) %></div>
-      </div>
-    </div>
-
-    <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-      <h2 class="text-xl font-bold mb-4">自动删除</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <strong class="block font-medium mb-1"><%= t('.alert_delete_delay') %>:</strong>
-          <%= @group_config.alert_delete_delay.to_i > 0 ? "#{@group_config.alert_delete_delay} 分钟" : "不删除" %>
-        </div>
-        <div>
-          <strong class="block font-medium mb-1"><%= t('.keyword_delete_delay') %>:</strong>
-          <%= @group_config.keyword_delete_delay.to_i > 0 ? "#{@group_config.keyword_delete_delay} 分钟" : "不删除" %>
-        </div>
+        <% cleanup_delays.each do |label, value| %>
+          <div>
+            <strong class="block font-medium mb-1"><%= label %>:</strong>
+            <%= value.to_i > 0 ? "#{value} 分钟" : "不删除" %>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>

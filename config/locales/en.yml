@@ -125,7 +125,9 @@ en:
       button: "Welcome %{name}! Please click the button below to verify you are not a bot."
       math: "Welcome %{name}! Please solve: %{a} %{op} %{b} = ?"
     handle_regular_message:
-      alert_message: "⚠️ Potential spam from @[%{user_name}](tg://user?id=%{user_id}) was automatically removed. (This message will be deleted in %{delete_message_delay} mins.)" 
+      alert_message: "⚠️ Potential spam from @[%{user_name}](tg://user?id=%{user_id}) was automatically removed. (This message %{delete_message_notice}.)"
+      delete_after_minutes: "will be deleted in %{minutes} mins"
+      no_auto_delete: "will not be deleted automatically"
       ban_user_message: "✅ User @[%{user_name}](tg://user?id=%{user_id}) has been banned from this group for repeated spam."
       global_ban_user_message: "✅ User @[%{user_name}](tg://user?id=%{user_id}) has been banned across all groups using this bot for repeated spam."
       

@@ -60,11 +60,36 @@ class TelegramBotter
   def delete_alart_message(sent_message, delay_minutes: nil)
     return if sent_message.nil?
     delay = delay_minutes || Rails.application.config.delete_message_delay
-    return if delay.nil? || delay <= 0
+    schedule_delete_message(chat_id: sent_message.chat.id, message_id: sent_message.message_id, delay_minutes: delay)
+  end
+
+  def schedule_delete_message(chat_id:, message_id:, delay_minutes:)
+    delay = delay_minutes.to_i
+    return if chat_id.nil? || message_id.nil? || delay <= 0
+
     TelegramBackgroundWorkerJob.set(wait: delay.minutes).perform_later(
       action: PostAction::DELETE_ALERT_MESSAGE,
-      chat_id: sent_message.chat.id,
-      message_id: sent_message.message_id)
+      chat_id: chat_id,
+      message_id: message_id)
+  end
+
+  def cleanup_delay(config, field)
+    return 0 unless config&.has_attribute?(field.to_s)
+
+    config.public_send(field).to_i
+  end
+
+  def schedule_command_cleanup(message)
+    return unless is_group_message?(message)
+
+    config = group_config_for(message)
+    schedule_delete_message(chat_id: message.chat.id, message_id: message.message_id,
+      delay_minutes: cleanup_delay(config, :alert_delete_delay))
+  end
+
+  def schedule_group_alert_cleanup(sent_message, group_id)
+    config = GroupConfig.find_by(group_id: group_id)
+    delete_alart_message(sent_message, delay_minutes: cleanup_delay(config, :alert_delete_delay))
   end
 
   # Determines the appropriate language code for a given message based on a layered approach.
@@ -75,7 +100,9 @@ class TelegramBotter
     # 1. Check for group-specific language setting in GroupConfig
     if is_group_message?(message)
       group_config = GroupConfig.find_by(group_id: message.chat.id)
-      return group_config.language if group_config&.language.present?
+      if group_config&.has_attribute?("language") && group_config.language.present?
+        return group_config.language
+      end
 
       group_state = GroupClassifierState.find_by(group_id: message.chat.id)
       return group_state.language if group_state&.language.present?
@@ -132,15 +159,20 @@ class TelegramBotter
       return
     end
 
-    # Forwarded message → delete if configured
-    if message.forward_origin.present? && group_config_for(message)&.del_forward?
-      begin
-        bot.api.delete_message(chat_id: message.chat.id, message_id: message.message_id)
-        Rails.logger.info "Deleted forwarded message in chat #{message.chat.id}"
-      rescue => e
-        Rails.logger.error "Failed to delete forwarded message: #{e.message}"
+    # Forwarded message cleanup uses a delay in minutes; 0 means keep it.
+    if message.forward_origin.present?
+      config = group_config_for(message)
+      forward_delete_delay = cleanup_delay(config, :forward_delete_delay)
+      if forward_delete_delay > 0
+        schedule_delete_message(chat_id: message.chat.id, message_id: message.message_id,
+          delay_minutes: forward_delete_delay)
+        Rails.logger.info "Scheduled forwarded message cleanup in chat #{message.chat.id}"
+        return
       end
-      return
+    end
+
+    if message_text.match?(%r{^/(start|setverify|setlang|markspam|feedspam|listbanuser|listspam)})
+      schedule_command_cleanup(message)
     end
 
     # Route to appropriate command handler and track command usage
@@ -208,7 +240,11 @@ class TelegramBotter
       parse_mode: "Markdown"
     )
     @ttl_cache.write(command_id, true)
-    delete_alart_message(sent_message)
+    if is_group_message?(message)
+      schedule_group_alert_cleanup(sent_message, message.chat.id)
+    else
+      delete_alart_message(sent_message)
+    end
   end
 
   def handle_set_language_command(bot, message)
@@ -220,10 +256,11 @@ class TelegramBotter
       target_language = command_parts[1]&.downcase
 
       if target_language.nil?
-        bot.api.send_message(
+        sent_message = bot.api.send_message(
           chat_id: message.chat.id,
           text: I18n.t("telegram_bot.setlang.usage", available_locales: I18n.available_locales.map(&:to_s).join(", ")),
         )
+        schedule_group_alert_cleanup(sent_message, message.chat.id)
         return
       end
       sent_message = nil
@@ -254,11 +291,12 @@ class TelegramBotter
         )
       end
 
-      delete_alart_message(sent_message)
+      schedule_group_alert_cleanup(sent_message, message.chat.id)
     end
   rescue => e
     Rails.logger.error "Error in setlang command: #{e.message}\n#{e.backtrace.join("\n")}"
-    bot.api.send_message(chat_id: message.chat.id, text: I18n.t("telegram_bot.setlang.general_error"))
+    sent_message = bot.api.send_message(chat_id: message.chat.id, text: I18n.t("telegram_bot.setlang.general_error"))
+    schedule_group_alert_cleanup(sent_message, message.chat.id) if is_group_message?(message)
   end
 
   def handle_markspam_command(bot, message)
@@ -303,7 +341,8 @@ class TelegramBotter
         # 2. Delete the spam message
         unless can_delete_messages
           response_message = I18n.t("telegram_bot.markspam.insufficient_permission_to_delete_message")
-          bot.api.send_message(chat_id: message.chat.id, text: response_message, parse_mode: "Markdown")
+          sent_message = bot.api.send_message(chat_id: message.chat.id, text: response_message, parse_mode: "Markdown")
+          schedule_group_alert_cleanup(sent_message, message.chat.id)
           return
         end
         bot.api.delete_message(chat_id: message.chat.id, message_id: replied.message_id)
@@ -330,10 +369,11 @@ class TelegramBotter
         end
 
         sent_message = bot.api.send_message(chat_id: message.chat.id, text: response_message, parse_mode: "Markdown")
-        delete_alart_message(sent_message, delay_minutes: group_config_for(message).alert_delete_delay)
+        schedule_group_alert_cleanup(sent_message, message.chat.id)
       rescue => e
         Rails.logger.error "Error in markspam command: #{e.message}"
-        bot.api.send_message(chat_id: message.chat.id, text: I18n.t("telegram_bot.markspam.failure_message"))
+        sent_message = bot.api.send_message(chat_id: message.chat.id, text: I18n.t("telegram_bot.markspam.failure_message"))
+        schedule_group_alert_cleanup(sent_message, message.chat.id)
       end
     end
   end
@@ -353,11 +393,12 @@ class TelegramBotter
       spam_text = message.text&.strip
       if spam_text.nil? || spam_text.empty?
         # User replied with an empty message
-        bot.api.send_message(
+        sent_message = bot.api.send_message(
           chat_id: message.chat.id,
           text: I18n.t("telegram_bot.feedspam.empty_reply_error", locale: @lang_code),
           reply_to_message_id: message.message_id # Reply to the empty reply to show who made the mistake
         )
+        schedule_group_alert_cleanup(sent_message, message.chat.id) if is_group_message?(message)
       else
         # Reroute to the actual training logic
         execute_spam_training(bot, message, spam_text)
@@ -394,13 +435,14 @@ class TelegramBotter
             input_field_placeholder: I18n.t("telegram_bot.feedspam.input_field_placeholder"),
             selective: true
           }.to_json # Manual JSON conversion
-          bot.api.send_message(
+          sent_message = bot.api.send_message(
             chat_id: message.chat.id,
             text: help_message,
             parse_mode: "Markdown",
             reply_to_message_id: message.message_id, # Reply to the user's /feedspam command
             reply_markup: force_reply_markup
           )
+          schedule_group_alert_cleanup(sent_message, message.chat.id) if is_group_message?(message)
           return
         else
           # Use the text provided as argument
@@ -442,10 +484,12 @@ class TelegramBotter
         preview = spam_text.length > 100 ? "#{escape_markdown(spam_text[0..100])}..." : escape_markdown(spam_text)
         response_message = I18n.t("telegram_bot.feedspam.success_message", preview: preview)
         # Send a final confirmation message
-        bot.api.send_message(chat_id: message.chat.id, text: response_message, parse_mode: "Markdown")
+        sent_message = bot.api.send_message(chat_id: message.chat.id, text: response_message, parse_mode: "Markdown")
+        schedule_group_alert_cleanup(sent_message, message.chat.id) if is_group_message?(message)
       rescue => e
         Rails.logger.error "Error in feedspam training: #{e.message}"
-        bot.api.send_message(chat_id: message.chat.id, text: "#{I18n.t('telegram_bot.feedspam.failure_message')}")
+        sent_message = bot.api.send_message(chat_id: message.chat.id, text: "#{I18n.t('telegram_bot.feedspam.failure_message')}")
+        schedule_group_alert_cleanup(sent_message, message.chat.id) if is_group_message?(message)
       end
     end
   end
@@ -456,11 +500,12 @@ class TelegramBotter
     I18n.with_locale(@lang_code) do
       # Check if the user is admin of the target group
       unless is_admin_of_group?(user: user, group_id: group_id)
-        bot.api.send_message(
+        sent_message = bot.api.send_message(
           chat_id: group_id,
           text: I18n.t("telegram_bot.is_admin.error_message", user_name: username, user_id: user_id),
           parse_mode: "Markdown"
         )
+        schedule_group_alert_cleanup(sent_message, group_id)
         return false
       end
       return true
@@ -1264,7 +1309,7 @@ class TelegramBotter
     buttons = build_welcome_keyboard(config)
 
     begin
-      if config.welcome_photo_id.present?
+      sent = if config.welcome_photo_id.present?
         bot.api.send_photo(chat_id: chat_id, photo: config.welcome_photo_id,
           caption: text, parse_mode: "Markdown", reply_markup: buttons)
       elsif config.welcome_video_id.present?
@@ -1275,8 +1320,10 @@ class TelegramBotter
       end
     rescue => e
       Rails.logger.error "Welcome send error: #{e.message}"
-      bot.api.send_message(chat_id: chat_id, text: text, parse_mode: "Markdown", reply_markup: buttons)
+      sent = bot.api.send_message(chat_id: chat_id, text: text, parse_mode: "Markdown", reply_markup: buttons)
     end
+
+    delete_alart_message(sent, delay_minutes: cleanup_delay(config, :welcome_delete_delay))
   end
 
   def build_welcome_keyboard(config)
@@ -1321,14 +1368,6 @@ class TelegramBotter
     matched = keywords.find { |kr| kr.match?(message.text) }
     return false unless matched
 
-    if config.del_keyword?
-      begin
-        bot.api.delete_message(chat_id: message.chat.id, message_id: message.message_id)
-      rescue => e
-        Rails.logger.error "Failed to delete keyword trigger message: #{e.message}"
-      end
-    end
-
     send_keyword_reply(bot, message.chat.id, matched)
     true
   end
@@ -1358,13 +1397,15 @@ class TelegramBotter
 
     mode = message.text.strip.split(/\s+/)[1]
     unless %w[none button math].include?(mode)
-      bot.api.send_message(chat_id: message.chat.id, text: "Usage: /setverify <none|button|math>")
+      sent_message = bot.api.send_message(chat_id: message.chat.id, text: "Usage: /setverify <none|button|math>")
+      schedule_group_alert_cleanup(sent_message, message.chat.id)
       return
     end
 
     config = group_config_for(message)
     config.update!(verification_mode: mode)
-    bot.api.send_message(chat_id: message.chat.id, text: "Verification mode set to: #{mode}")
+    sent_message = bot.api.send_message(chat_id: message.chat.id, text: "Verification mode set to: #{mode}")
+    schedule_group_alert_cleanup(sent_message, message.chat.id)
   end
 
   Signal.trap("TERM") do

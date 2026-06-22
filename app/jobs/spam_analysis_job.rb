@@ -98,11 +98,12 @@ class SpamAnalysisJob < ApplicationJob
     # Send the warning message
     username = [ message.from&.first_name, message.from&.last_name ].compact.join(" ")
     config = GroupConfig.find_by(group_id: message.chat.id)
-    delay = config&.alert_delete_delay || Rails.application.config.delete_message_delay
+    delay = (config&.alert_delete_delay || 0).to_i
+    delete_message_notice = delay > 0 ? I18n.t("telegram_bot.handle_regular_message.delete_after_minutes", minutes: delay) : I18n.t("telegram_bot.handle_regular_message.no_auto_delete")
     alert_msg = I18n.t("telegram_bot.handle_regular_message.alert_message",
                        user_name: username,
                        user_id: message.from.id,
-                       delete_message_delay: delay)
+                       delete_message_notice: delete_message_notice)
     sent_warning_message = bot.api.send_message(
       chat_id: message.chat.id,
       text: alert_msg,
