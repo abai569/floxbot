@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - "v*"
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Git ref to build, for example master or v1.2.0"
+        required: false
+        default: ""
+
+jobs:
+  rails-test:
+    name: Rails tests
+    runs-on: ubuntu-latest
+    env:
+      RAILS_ENV: test
+      SECRET_KEY_BASE: test-secret-key-base
+      TELEGRAM_BOT_TOKEN: test-token
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: password
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref }}
+
+      - name: Install system packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y libyaml-dev libvips sqlite3
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Prepare test database
+        run: bin/rails db:test:prepare
+
+      - name: Run tests
+        run: bin/rails test
+
+  docker-build:
+    name: Docker build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: floxbot:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
