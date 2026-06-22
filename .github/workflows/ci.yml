@@ -32,6 +32,9 @@ jobs:
         with:
           ref: ${{ github.event.inputs.ref || github.ref }}
 
+      - name: Fix binstub permissions
+        run: chmod +x bin/*
+
       - name: Install system packages
         run: |
           sudo apt-get update
