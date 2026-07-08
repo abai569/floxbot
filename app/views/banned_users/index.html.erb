@@ -88,11 +88,11 @@
                   </td>
   
                   <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div class="flex items-center justify-end space-x-2">
-                      <%= link_to t('.actions.view'), banned_user_path(banned_user, request.query_parameters), class: "text-indigo-600 hover:text-indigo-900 transition-colors duration-150" %>
-                      <%= link_to t('.actions.edit'), edit_banned_user_path(banned_user), class: "text-indigo-600 hover:text-indigo-900 transition-colors duration-150" %>
+                    <div class="action-group">
+                      <%= link_to t('.actions.view'), banned_user_path(banned_user, request.query_parameters), class: "action-pill action-pill-primary" %>
+                      <%= link_to t('.actions.edit'), edit_banned_user_path(banned_user), class: "action-pill" %>
                       <%= link_to t('.actions.delete'), banned_user, method: :delete, 
-                          class: "text-red-600 hover:text-red-900 transition-colors duration-150", 
+                          class: "action-pill action-pill-danger",
                           data: { turbo_confirm: t('.confirm') } %>
                     </div>
                   </td>
@@ -130,9 +130,9 @@
           <p class="mt-2 line-clamp-3 text-sm text-slate-500"><%= banned_user.spam_message.presence || "—" %></p>
           <div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-3">
             <span class="text-xs text-slate-500"><%= display_time_ago(banned_user.created_at) %></span>
-            <div class="flex gap-3 text-sm font-semibold">
-              <%= link_to t('.actions.view'), banned_user_path(banned_user, request.query_parameters), class: "text-blue-600" %>
-              <%= link_to t('.actions.edit'), edit_banned_user_path(banned_user), class: "text-slate-700" %>
+            <div class="action-group">
+              <%= link_to t('.actions.view'), banned_user_path(banned_user, request.query_parameters), class: "action-pill action-pill-primary" %>
+              <%= link_to t('.actions.edit'), edit_banned_user_path(banned_user), class: "action-pill" %>
             </div>
           </div>
         </article>

@@ -1,4 +1,4 @@
-<%= form_with(model: group_config, class: "space-y-6") do |form| %>
+<%= form_with(model: group_config, class: "space-y-6", id: "group-config-form") do |form| %>
   <% if group_config.errors.any? %>
     <div class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-red-700">
       <h2 class="font-bold"><%= t('.error_header') %></h2>
@@ -106,7 +106,4 @@
     </div>
   </section>
 
-  <div class="sticky bottom-0 z-20 -mx-3 border-t border-slate-200 bg-white/85 px-3 py-4 backdrop-blur sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:px-0 sm:py-0">
-    <%= form.submit class: "w-full cursor-pointer px-5 py-3 font-semibold text-white sm:w-auto" %>
-  </div>
 <% end %>

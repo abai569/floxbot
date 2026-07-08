@@ -1,6 +1,13 @@
 # Changelog
 
 This file summarizes the most important changes for each release.
+* Version 1.2.3 (2026-07-08)
+  - Align the header width with the main content container.
+  - Move group configuration and keyword reply form actions into the page header.
+  - Improve admin action buttons with compact pill styling across table and mobile card views.
+  - Fix blank submit buttons caused by generic input styling.
+  - Make trained message bulk selection obvious on desktop and mobile.
+
 * Version 1.2.2 (2026-07-08)
   - Refresh the admin interface with a unified visual system for navigation, cards, buttons, forms, tables, and flash messages.
   - Redesign the login page and group configuration views for clearer information hierarchy.

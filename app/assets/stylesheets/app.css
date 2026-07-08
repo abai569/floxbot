@@ -125,7 +125,7 @@ tbody tr:hover {
   background-color: rgba(239, 246, 255, 0.65) !important;
 }
 
-input:not([type="checkbox"]):not([type="radio"]),
+input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="reset"]),
 select,
 textarea {
   min-height: 2.75rem;
@@ -136,7 +136,7 @@ textarea {
   transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
 }
 
-input:not([type="checkbox"]):not([type="radio"]):focus,
+input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="reset"]):focus,
 select:focus,
 textarea:focus {
   outline: none !important;
@@ -202,6 +202,89 @@ pre {
   font-size: 0.75rem;
   font-weight: 700;
   line-height: 1;
+}
+
+.action-group {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.action-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.86);
+  padding: 0.38rem 0.72rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #334155;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+}
+
+.action-pill:hover {
+  transform: translateY(-1px);
+  border-color: rgba(37, 99, 235, 0.35);
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.action-pill-primary {
+  border-color: rgba(37, 99, 235, 0.22);
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.action-pill-danger {
+  border-color: rgba(220, 38, 38, 0.18);
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.action-pill-danger:hover {
+  border-color: rgba(220, 38, 38, 0.32);
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.select-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  border-radius: 999px;
+  background: rgba(239, 246, 255, 0.86);
+  padding: 0.4rem 0.68rem;
+  color: #1d4ed8;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.select-pill:hover {
+  border-color: rgba(37, 99, 235, 0.36);
+  background: #dbeafe;
+  transform: translateY(-1px);
+}
+
+.select-pill input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+}
+
+.select-pill-header {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.select-pill-mobile {
+  padding: 0.5rem 0.8rem;
+  font-size: 0.82rem;
 }
 
 .mobile-card {

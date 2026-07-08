@@ -1,13 +1,17 @@
 <% content_for :title, t('.title') %>
 
 <div class="w-full max-w-5xl mx-auto space-y-6">
-  <div>
-    <p class="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600"><%= t('layout.group_configs') %></p>
-    <h1 class="page-title mt-2"><%= t('.title') %></h1>
-    <p class="page-subtitle">为新群组建立验证、欢迎和清理规则。</p>
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600"><%= t('layout.group_configs') %></p>
+      <h1 class="page-title mt-2"><%= t('.title') %></h1>
+      <p class="page-subtitle">为新群组建立验证、欢迎和清理规则。</p>
+    </div>
+    <div class="grid grid-cols-2 gap-2 sm:flex sm:items-center">
+      <button type="submit" form="group-config-form" class="rounded-xl bg-blue-600 px-4 py-2.5 text-center text-sm font-semibold text-white shadow-lg shadow-blue-500/20 hover:bg-blue-700">创建</button>
+      <%= link_to t('.back_link'), group_configs_path, class: "rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50" %>
+    </div>
   </div>
 
   <%= render "form", group_config: @group_config %>
-
-  <%= link_to t('.back_link'), group_configs_path, class: "w-full sm:w-auto text-center rounded-xl px-4 py-2.5 bg-white text-slate-700 border border-slate-200 inline-block font-semibold hover:bg-slate-50" %>
 </div>

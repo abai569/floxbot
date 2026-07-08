@@ -86,7 +86,7 @@
         </div>
 
         <div class="flex items-center space-x-3 pt-4 sm:pt-0">
-          <%= form.submit t('.apply_filters'), class: "rounded-lg px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium cursor-pointer transition-colors duration-150" %>
+          <%= form.button t('.apply_filters'), type: "submit", class: "rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 hover:bg-blue-700" %>
           <%= link_to t('.clear_filters'), trained_messages_path, class: "rounded-lg px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition-colors duration-150" %>
         </div>
       </div>
@@ -103,12 +103,13 @@
       <%= hidden_field_tag key, value %>
     <% end %>
 
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
-      <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-        <span class="text-sm font-medium text-gray-700"><%= t('.with_selected') %></span>
-        <div class="flex space-x-2">
-          <%= form.submit t('.mark_as_spam'), class: "flex-1 sm:flex-none rounded-lg px-4 py-2.5 sm:py-2 bg-red-100 hover:bg-red-200 text-red-700 text-sm font-medium cursor-pointer transition-colors duration-150" %>
-          <%= form.submit t('.mark_as_ham'), class: "flex-1 sm:flex-none rounded-lg px-4 py-2.5 sm:py-2 bg-green-100 hover:bg-green-200 text-green-700 text-sm font-medium cursor-pointer transition-colors duration-150" %>
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
+        <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+          <span class="text-sm font-medium text-gray-700"><%= t('.with_selected') %></span>
+          <span class="text-xs font-medium text-gray-500"><%= t('.bulk_hint') %></span>
+          <div class="flex space-x-2">
+            <%= form.button t('.mark_as_spam'), name: "commit", value: t('.mark_as_spam'), type: "submit", class: "flex-1 sm:flex-none rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-700 hover:bg-red-100" %>
+            <%= form.button t('.mark_as_ham'), name: "commit", value: t('.mark_as_ham'), type: "submit", class: "flex-1 sm:flex-none rounded-xl border border-green-200 bg-green-50 px-4 py-2.5 text-sm font-semibold text-green-700 hover:bg-green-100" %>
         </div>
       </div>
       <div class="text-sm text-gray-500">
@@ -122,8 +123,11 @@
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
-              <th scope="col" class="p-4 w-12">
-                <input type="checkbox" data-checkbox-select-all-target="parent" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+              <th scope="col" class="p-4 w-32">
+                <label class="select-pill select-pill-header">
+                  <input type="checkbox" data-checkbox-select-all-target="parent" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                  <span><%= t('.select_all') %></span>
+                </label>
               </th>
               <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[80px]">
                 <%= link_to trained_messages_path(params.permit!.merge(sort: 'id', direction: params[:sort] == 'id' && params[:direction] == 'asc' ? 'desc' : 'asc')), class: "hover:text-gray-700 flex items-center space-x-1" do %>
@@ -188,8 +192,11 @@
             <% if !@trained_messages.empty? %>
               <% @trained_messages.each do |trained_message| %>
                 <tr class="hover:bg-gray-50 transition-colors duration-150">
-                  <td class="p-4 w-12">
-                    <input type="checkbox" name="trained_message_ids[]" value="<%= trained_message.id %>" data-checkbox-select-all-target="child" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                  <td class="p-4 w-24">
+                    <label class="select-pill">
+                      <input type="checkbox" name="trained_message_ids[]" value="<%= trained_message.id %>" data-checkbox-select-all-target="child" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                      <span><%= t('.select_row') %></span>
+                    </label>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     <%= trained_message.id %>
@@ -228,11 +235,11 @@
                     <%= display_time_ago(trained_message.updated_at) %>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div class="flex items-center justify-end space-x-2">
-                      <%= link_to t('.actions.view'), trained_message_path(trained_message, request.query_parameters), class: "text-indigo-600 hover:text-indigo-900 transition-colors duration-150" %>
-                      <%= link_to t('.actions.edit'), edit_trained_message_path(trained_message), class: "text-indigo-600 hover:text-indigo-900 transition-colors duration-150" %>
+                    <div class="action-group">
+                      <%= link_to t('.actions.view'), trained_message_path(trained_message, request.query_parameters), class: "action-pill action-pill-primary" %>
+                      <%= link_to t('.actions.edit'), edit_trained_message_path(trained_message), class: "action-pill" %>
                       <%= link_to t('.actions.delete'), trained_message_path(trained_message, return_url: request.original_url), method: :delete,
-                          class: "text-red-600 hover:text-red-900 transition-colors duration-150",
+                          class: "action-pill action-pill-danger",
                           data: { turbo_confirm: t('.confirm') } %>
                     </div>
                   </td>
@@ -260,9 +267,12 @@
       <% if !@trained_messages.empty? %>
         <% @trained_messages.each do |trained_message| %>
           <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-            <div class="flex items-start justify-between mb-2">
-              <div class="flex items-center space-x-2">
-                <input type="checkbox" name="trained_message_ids[]" value="<%= trained_message.id %>" data-checkbox-select-all-target="child" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+            <div class="flex items-start justify-between mb-2 gap-3">
+              <div class="flex flex-col items-start gap-1.5">
+                <label class="select-pill select-pill-mobile">
+                  <input type="checkbox" name="trained_message_ids[]" value="<%= trained_message.id %>" data-checkbox-select-all-target="child" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                  <span><%= t('.select_row') %></span>
+                </label>
                 <span class="text-xs text-gray-400">#<%= trained_message.id %></span>
               </div>
               <div class="flex items-center space-x-1.5">
@@ -291,10 +301,10 @@
             </div>
 
             <div class="flex items-center space-x-3 pt-2 border-t border-gray-100">
-              <%= link_to t('.actions.view'), trained_message_path(trained_message, request.query_parameters), class: "text-xs text-indigo-600 hover:text-indigo-900 font-medium" %>
-              <%= link_to t('.actions.edit'), edit_trained_message_path(trained_message), class: "text-xs text-indigo-600 hover:text-indigo-900 font-medium" %>
+              <%= link_to t('.actions.view'), trained_message_path(trained_message, request.query_parameters), class: "action-pill action-pill-primary" %>
+              <%= link_to t('.actions.edit'), edit_trained_message_path(trained_message), class: "action-pill" %>
               <%= link_to t('.actions.delete'), trained_message_path(trained_message, return_url: request.original_url), method: :delete,
-                  class: "text-xs text-red-600 hover:text-red-900 font-medium",
+                  class: "action-pill action-pill-danger",
                   data: { turbo_confirm: t('.confirm') } %>
             </div>
           </div>

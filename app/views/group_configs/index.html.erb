@@ -58,9 +58,9 @@
                 </span>
               </td>
               <td class="px-6 py-5 text-right text-sm font-semibold">
-                <div class="flex items-center justify-end gap-3">
-                  <%= link_to t('.actions.view'), group_config_path(config), class: "text-blue-600 hover:text-blue-800" %>
-                  <%= link_to t('.actions.edit'), edit_group_config_path(config), class: "text-slate-600 hover:text-slate-900" %>
+                <div class="action-group">
+                  <%= link_to t('.actions.view'), group_config_path(config), class: "action-pill action-pill-primary" %>
+                  <%= link_to t('.actions.edit'), edit_group_config_path(config), class: "action-pill" %>
                 </div>
               </td>
             </tr>
@@ -97,9 +97,9 @@
           <span class="badge-soft <%= active_cleanup.positive? ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600' %>">
             <%= active_cleanup.positive? ? "#{active_cleanup} 项清理" : "不自动清理" %>
           </span>
-          <div class="flex gap-3 text-sm font-semibold">
-            <%= link_to t('.actions.view'), group_config_path(config), class: "text-blue-600" %>
-            <%= link_to t('.actions.edit'), edit_group_config_path(config), class: "text-slate-700" %>
+          <div class="action-group">
+            <%= link_to t('.actions.view'), group_config_path(config), class: "action-pill action-pill-primary" %>
+            <%= link_to t('.actions.edit'), edit_group_config_path(config), class: "action-pill" %>
           </div>
         </div>
       </article>

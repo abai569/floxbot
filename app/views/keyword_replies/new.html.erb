@@ -1,9 +1,17 @@
 <% content_for :title, t('.title') %>
 
-<div class="md:w-2/3 w-full">
-  <h1 class="font-bold text-2xl sm:text-3xl md:text-4xl mb-6"><%= t('.title') %></h1>
+<div class="w-full max-w-5xl mx-auto space-y-6">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600"><%= t('layout.keywords') %></p>
+      <h1 class="page-title mt-2"><%= t('.title') %></h1>
+      <p class="page-subtitle">为群组新增关键词自动回复规则。</p>
+    </div>
+    <div class="grid grid-cols-2 gap-2 sm:flex sm:items-center">
+      <button type="submit" form="keyword-reply-form" class="rounded-xl bg-blue-600 px-4 py-2.5 text-center text-sm font-semibold text-white shadow-lg shadow-blue-500/20 hover:bg-blue-700">创建</button>
+      <%= link_to t('.back_link'), keyword_replies_path, class: "rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50" %>
+    </div>
+  </div>
 
   <%= render "form", keyword_reply: @keyword_reply %>
-
-  <%= link_to t('.back_link'), keyword_replies_path, class: "w-full sm:w-auto text-center mt-6 rounded-lg px-4 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium transition-colors duration-150" %>
 </div>

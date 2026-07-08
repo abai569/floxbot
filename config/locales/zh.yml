@@ -140,6 +140,9 @@ zh:
       clear_filters: "清除筛选"
       with_selected: "已选择:"
       selected: "条"
+      bulk_hint: "先在列表中勾选要处理的消息"
+      select_all: "全选本页"
+      select_row: "选择"
       mark_as_spam: "标记为广告"
       mark_as_ham: "标记为正常"
       columns:

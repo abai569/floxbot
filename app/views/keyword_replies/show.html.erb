@@ -1,37 +1,53 @@
 <% content_for :title, t('.title') %>
 
-<div class="md:w-2/3 w-full">
-  <h1 class="font-bold text-4xl"><%= t('.title') %></h1>
-
-  <div class="my-5 space-y-4">
-    <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-      <div class="grid grid-cols-2 gap-4 mb-4">
-        <div><strong><%= t('.group_id') %>:</strong> <%= @keyword_reply.group_id %></div>
-        <div><strong><%= t('.keyword') %>:</strong> <code class="bg-gray-100 px-2 py-1 rounded"><%= @keyword_reply.keyword %></code></div>
-        <div><strong><%= t('.match_mode') %>:</strong>
-          <% if @keyword_reply.is_exact? %><%= t('.match_modes.exact') %><% elsif @keyword_reply.is_regex? %><%= t('.match_modes.regex') %><% else %><%= t('.match_modes.include') %><% end %>
-        </div>
-        <div><strong><%= t('.reply_type') %>:</strong> <%= @keyword_reply.reply_type.humanize %></div>
-      </div>
-
-      <div>
-        <strong class="block font-medium mb-1"><%= t('.reply_content') %>:</strong>
-        <div class="bg-gray-50 p-3 rounded whitespace-pre-wrap"><%= @keyword_reply.reply_content %></div>
-        <% if @keyword_reply.reply_text.present? %>
-          <div class="mt-2">
-            <strong class="block font-medium mb-1"><%= t('.with_caption') %>:</strong>
-            <div class="bg-gray-50 p-3 rounded"><%= @keyword_reply.reply_text %></div>
-          </div>
-        <% end %>
-      </div>
+<div class="w-full max-w-5xl mx-auto space-y-6">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600"><%= t('layout.keywords') %></p>
+      <h1 class="page-title mt-2"><%= t('.title') %></h1>
+      <p class="page-subtitle">查看关键词回复规则和输出内容。</p>
+    </div>
+    <div class="grid grid-cols-3 gap-2 sm:flex sm:items-center">
+      <%= link_to t('.edit_link'), edit_keyword_reply_path(@keyword_reply), class: "rounded-xl bg-blue-600 px-4 py-2.5 text-center text-sm font-semibold text-white shadow-lg shadow-blue-500/20 hover:bg-blue-700" %>
+      <%= link_to t('.back_link'), keyword_replies_path, class: "rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50" %>
+      <%= button_to t('.delete_link'), @keyword_reply, method: :delete, form_class: "contents",
+          class: "rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-center text-sm font-semibold text-red-700 hover:bg-red-100",
+          data: { turbo_confirm: t('keyword_replies.index.confirm') } %>
     </div>
   </div>
 
-  <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
-    <%= link_to t('.edit_link'), edit_keyword_reply_path(@keyword_reply), class: "w-full sm:w-auto text-center rounded-lg px-4 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium transition-colors duration-150" %>
-    <%= link_to t('.back_link'), keyword_replies_path, class: "w-full sm:w-auto text-center rounded-lg px-4 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium transition-colors duration-150" %>
-    <%= button_to t('.delete_link'), @keyword_reply, method: :delete, form_class: "sm:inline-block",
-        class: "w-full sm:w-auto rounded-lg px-4 py-2.5 bg-red-100 hover:bg-red-200 text-red-700 font-medium cursor-pointer transition-colors duration-150",
-        data: { turbo_confirm: t('keyword_replies.index.confirm') } %>
-  </div>
+  <section class="panel-card overflow-hidden">
+    <div class="border-b border-slate-200/70 px-5 py-4 sm:px-6">
+      <h2 class="text-lg font-black text-slate-950"><%= @keyword_reply.keyword %></h2>
+      <p class="mt-1 text-sm text-slate-500">Group <%= @keyword_reply.group_id %></p>
+    </div>
+    <div class="grid grid-cols-1 gap-4 p-5 sm:p-6 md:grid-cols-3">
+      <div class="rounded-2xl border border-slate-200 bg-white/70 p-4">
+        <p class="text-sm font-semibold text-slate-500"><%= t('.match_mode') %></p>
+        <p class="mt-2 text-lg font-black text-slate-950">
+          <% if @keyword_reply.is_exact? %><%= t('.match_modes.exact') %><% elsif @keyword_reply.is_regex? %><%= t('.match_modes.regex') %><% else %><%= t('.match_modes.include') %><% end %>
+        </p>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-white/70 p-4">
+        <p class="text-sm font-semibold text-slate-500"><%= t('.reply_type') %></p>
+        <p class="mt-2 text-lg font-black text-slate-950"><%= @keyword_reply.reply_type.humanize %></p>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-white/70 p-4">
+        <p class="text-sm font-semibold text-slate-500"><%= t('.group_id') %></p>
+        <p class="mt-2 text-lg font-black text-slate-950"><%= @keyword_reply.group_id %></p>
+      </div>
+    </div>
+    <div class="space-y-5 border-t border-slate-200/70 p-5 sm:p-6">
+      <div>
+        <p class="mb-2 text-sm font-semibold text-slate-600"><%= t('.reply_content') %></p>
+        <div class="rounded-2xl border border-slate-200 bg-slate-50/90 p-4 text-sm leading-7 text-slate-800 whitespace-pre-wrap"><%= @keyword_reply.reply_content %></div>
+      </div>
+      <% if @keyword_reply.reply_text.present? %>
+        <div>
+          <p class="mb-2 text-sm font-semibold text-slate-600"><%= t('.with_caption') %></p>
+          <div class="rounded-2xl border border-slate-200 bg-slate-50/90 p-4 text-sm leading-7 text-slate-800 whitespace-pre-wrap"><%= @keyword_reply.reply_text %></div>
+        </div>
+      <% end %>
+    </div>
+  </section>
 </div>
