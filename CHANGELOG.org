@@ -1,6 +1,11 @@
 # Changelog
 
 This file summarizes the most important changes for each release.
+* Version 1.2.4 (2026-07-08)
+  - Center admin form and detail pages with a consistent max-width container.
+  - Move form and detail action buttons to the bottom-right for easier access.
+  - Apply the same action placement to trained messages, group configs, keyword replies, banned users, and group classifier states.
+
 * Version 1.2.3 (2026-07-08)
   - Align the header width with the main content container.
   - Move group configuration and keyword reply form actions into the page header.
