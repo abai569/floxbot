@@ -1,6 +1,12 @@
 # Changelog
 
 This file summarizes the most important changes for each release.
+* Version 1.2.2 (2026-07-08)
+  - Refresh the admin interface with a unified visual system for navigation, cards, buttons, forms, tables, and flash messages.
+  - Redesign the login page and group configuration views for clearer information hierarchy.
+  - Add mobile-first card layouts for group configs, banned users, keyword replies, and classifier states.
+  - Improve group configuration forms with sectioned cards, helper text, and a clearer mobile submit flow.
+
 * Version 1.2.1 (2026-07-08)
   - Fix /feedspam samples being saved as maybe_spam instead of spam, preventing them from training the classifier.
   - Add a safe default for channel_broadcast_blacklist so spam analysis no longer crashes before enqueueing.

@@ -1,9 +1,13 @@
 <% content_for :title, t('.title') %>
 
-<div class="md:w-2/3 w-full">
-  <h1 class="font-bold text-2xl sm:text-3xl md:text-4xl mb-6"><%= t('.title') %></h1>
+<div class="w-full max-w-5xl mx-auto space-y-6">
+  <div>
+    <p class="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600"><%= t('layout.group_configs') %></p>
+    <h1 class="page-title mt-2"><%= t('.title') %></h1>
+    <p class="page-subtitle">为新群组建立验证、欢迎和清理规则。</p>
+  </div>
 
   <%= render "form", group_config: @group_config %>
 
-  <%= link_to t('.back_link'), group_configs_path, class: "w-full sm:w-auto text-center mt-6 rounded-lg px-4 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium transition-colors duration-150" %>
+  <%= link_to t('.back_link'), group_configs_path, class: "w-full sm:w-auto text-center rounded-xl px-4 py-2.5 bg-white text-slate-700 border border-slate-200 inline-block font-semibold hover:bg-slate-50" %>
 </div>

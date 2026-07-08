@@ -15,18 +15,19 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-gray-50">
+  <body>
     <% if authenticated? %>
     <!-- Navigation Bar -->
-    <nav class="bg-white shadow-lg border-b border-gray-200" data-controller="mobile-nav" data-action="click@window->mobile-nav#clickOutside">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav class="app-nav" data-controller="mobile-nav" data-action="click@window->mobile-nav#clickOutside">
+      <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
           <!-- Logo/Brand -->
-          <div class="flex-shrink-0 flex items-center">
-            <%= link_to root_path, class: "text-xl font-bold text-gray-800 hover:text-gray-600" do %>
-              <%= t('layout.brand') %>
+          <div class="flex-shrink-0 flex items-center min-w-0">
+            <%= link_to root_path, class: "flex items-center gap-2 text-lg sm:text-xl font-black tracking-tight text-slate-900 hover:text-blue-700" do %>
+              <span class="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-sm font-black text-white shadow-lg shadow-blue-500/25">F</span>
+              <span class="brand-text"><%= t('layout.brand') %></span>
             <% end %>
-            <span class="ml-2 text-xs font-medium text-gray-400">
+            <span class="ml-2 rounded-full bg-slate-100 px-2 py-1 text-[11px] font-semibold text-slate-500">
               v<%= TelegramSpamSniperBot::VERSION %>
             </span>
 
@@ -38,23 +39,23 @@
           </div>
 
           <!-- Desktop Navigation Links -->
-          <div class="hidden sm:flex sm:items-center sm:space-x-8">
+          <div class="hidden sm:flex sm:items-center sm:space-x-5 lg:space-x-7">
             <%= link_to t('layout.trained_messages'), trained_messages_path,
-            class: "#{current_page?(trained_messages_path) ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
+            class: "#{current_page?(trained_messages_path) ? 'border-indigo-500 text-slate-950' : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-900'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-semibold" %>
 
             <%= link_to t('layout.group_classifiers'), group_classifier_states_path,
-            class: "#{current_page?(group_classifier_states_path) ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
+            class: "#{current_page?(group_classifier_states_path) ? 'border-indigo-500 text-slate-950' : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-900'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-semibold" %>
 
             <%= link_to t('layout.banned_users'), banned_users_path,
-            class: "#{current_page?(banned_users_path) ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
+            class: "#{current_page?(banned_users_path) ? 'border-indigo-500 text-slate-950' : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-900'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-semibold" %>
             <%= link_to t('layout.tokenization_samples'), new_tokenization_sample_path,
-            class: "#{current_page?(new_tokenization_sample_path) ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
+            class: "#{current_page?(new_tokenization_sample_path) ? 'border-indigo-500 text-slate-950' : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-900'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-semibold" %>
             <%= link_to t('layout.group_configs'), group_configs_path,
-            class: "#{current_page?(group_configs_path) ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
+            class: "#{current_page?(group_configs_path) ? 'border-indigo-500 text-slate-950' : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-900'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-semibold" %>
             <%= link_to t('layout.keywords'), keyword_replies_path,
-            class: "#{current_page?(keyword_replies_path) ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
+            class: "#{current_page?(keyword_replies_path) ? 'border-indigo-500 text-slate-950' : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-900'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-semibold" %>
             <%= link_to t('layout.mission_control'), mission_control_jobs_path,
-            class: "#{current_page?(mission_control_jobs_path) ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
+            class: "#{current_page?(mission_control_jobs_path) ? 'border-indigo-500 text-slate-950' : 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-900'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-semibold" %>
           </div>
 
           <!-- Mobile: Hamburger + Logout -->
@@ -62,7 +63,7 @@
             <%= link_to "退出", logout_path, data: { turbo_method: :delete },
                 class: "text-sm text-gray-500 hover:text-red-600 px-2 py-2 rounded-md" %>
             <button type="button" data-action="mobile-nav#toggle"
-                    class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    class="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white/80 p-2 text-slate-500 shadow-sm hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     aria-label="Toggle navigation menu">
               <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -73,14 +74,14 @@
           <!-- Desktop Logout -->
           <div class="hidden sm:flex items-center">
             <%= link_to "退出", logout_path, data: { turbo_method: :delete },
-                class: "text-sm text-gray-500 hover:text-red-600 px-3 py-2 rounded-md" %>
+                class: "rounded-xl px-3 py-2 text-sm font-semibold text-slate-500 hover:bg-red-50 hover:text-red-600" %>
           </div>
         </div>
       </div>
 
       <!-- Mobile Dropdown Menu -->
-      <div data-mobile-nav-target="menu" class="hidden sm:hidden border-t border-gray-200 shadow-inner">
-        <div class="px-3 py-3 space-y-1">
+      <div data-mobile-nav-target="menu" class="hidden sm:hidden border-t border-slate-200 bg-white/90 shadow-inner backdrop-blur">
+        <div class="grid gap-1 px-3 py-3">
           <%= link_to t('layout.trained_messages'), trained_messages_path,
               class: "block px-3 py-2.5 rounded-md text-base font-medium #{current_page?(trained_messages_path) ? 'bg-indigo-50 text-indigo-700' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'}" %>
           <%= link_to t('layout.group_classifiers'), group_classifier_states_path,
@@ -100,7 +101,7 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="container mx-auto mt-6 sm:mt-8 px-4 sm:px-5 flex">
+    <main class="app-container flex">
       <!-- Flash Messages -->
       <div class="w-full">
         <% if notice %>
