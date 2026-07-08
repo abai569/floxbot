@@ -166,16 +166,16 @@ zh:
       showing_range: "第 %{start} - %{end} 条，共 %{total} 条结果"
     show:
       title: "查看训练消息"
-      edit_link: "编辑此条训练消息"
-      back_link: "返回训练消息列表"
-      delete_link: "删除此条训练消息"
+      edit_link: "编辑"
+      back_link: "返回"
+      delete_link: "删除"
     new:
       title: "新增训练消息"
-      back_link: "返回训练消息列表"
+      back_link: "返回"
     edit:
       title: "编辑训练消息"
-      show_link: "查看此条训练消息"
-      back_link: "返回训练消息列表"
+      show_link: "查看"
+      back_link: "返回"
     form:
       error_header: "以下问题导致此训练消息无法保存："
       labels:
@@ -247,17 +247,17 @@ zh:
       total_results: "条记录"
     show:
       title: "查看封禁用户"
-      edit_link: "编辑此封禁用户"
-      back_link: "返回封禁用户列表"
-      delete_link: "删除此封禁用户"
+      edit_link: "编辑"
+      back_link: "返回"
+      delete_link: "删除"
       confirm: "确定要删除吗？"
     new:
       title: "新增封禁用户"
-      back_link: "返回封禁用户列表"
+      back_link: "返回"
     edit:
       title: "编辑封禁用户"
-      show_link: "查看此封禁用户"
-      back_link: "返回封禁用户列表"
+      show_link: "查看"
+      back_link: "返回"
     form:
       error_header: "以下问题导致此封禁用户无法保存："
       error_label: "个错误"
@@ -323,17 +323,17 @@ zh:
         rank: "排名"
         word: "词语"
         count: "次数"
-      edit_link: "编辑此分类器"
-      back_link: "返回群组分类器列表"
-      delete_link: "删除此分类器"
+      edit_link: "编辑"
+      back_link: "返回"
+      delete_link: "删除"
       confirm: "确定要删除吗？"
     new:
       title: "新增群组分类器"
-      back_link: "返回群组分类器列表"
+      back_link: "返回"
     edit:
       title: "编辑群组分类器"
-      show_link: "查看此分类器"
-      back_link: "返回群组分类器列表"
+      show_link: "查看"
+      back_link: "返回"
     form:
       error_header: "以下问题导致此分类器无法保存："
       error_label: "个错误"

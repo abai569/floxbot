@@ -1,6 +1,11 @@
 # Changelog
 
 This file summarizes the most important changes for each release.
+* Version 1.2.5 (2026-07-08)
+  - Unify edit and new form action buttons into one bottom-right button group.
+  - Move remaining trained message, banned user, and group classifier submit buttons out of the form card.
+  - Shorten Chinese action labels to match the compact admin button style.
+
 * Version 1.2.4 (2026-07-08)
   - Center admin form and detail pages with a consistent max-width container.
   - Move form and detail action buttons to the bottom-right for easier access.
