@@ -1,9 +1,14 @@
 <% content_for :title, t('.title') %>
  
-<div class="md:w-2/3 w-full">
-  <h1 class="font-bold text-2xl sm:text-3xl md:text-4xl mb-6"><%= t('.title') %></h1>
+<div class="w-full max-w-5xl mx-auto space-y-6">
+  <div>
+    <p class="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600"><%= t('layout.banned_users') %></p>
+    <h1 class="page-title mt-2"><%= t('.title') %></h1>
+  </div>
  
   <%= render "form", banned_user: @banned_user %>
  
-  <%= link_to t('.back_link'), banned_users_path, class: "w-full sm:w-auto text-center mt-6 rounded-lg px-4 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium transition-colors duration-150" %>
+  <div class="flex justify-end">
+    <%= link_to t('.back_link'), banned_users_path, class: "w-full sm:w-auto text-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 font-semibold text-slate-700 hover:bg-slate-50" %>
+  </div>
 </div>

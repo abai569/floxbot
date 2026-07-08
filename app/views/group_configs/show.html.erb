@@ -1,16 +1,10 @@
 <% content_for :title, t('.title', group: @group_config.group_name || @group_config.group_id) %>
 
-<div class="w-full space-y-6">
-  <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-    <div>
-      <p class="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600"><%= t('layout.group_configs') %></p>
-      <h1 class="page-title mt-2"><%= @group_config.group_name || @group_config.group_id %></h1>
-      <p class="page-subtitle">ID <%= @group_config.group_id %> · <%= t('.title', group: @group_config.group_name || @group_config.group_id) %></p>
-    </div>
-    <div class="flex flex-col gap-2 sm:flex-row">
-      <%= link_to t('.edit_link'), edit_group_config_path(@group_config), class: "w-full sm:w-auto text-center rounded-xl px-4 py-2.5 bg-blue-600 text-white font-semibold" %>
-      <%= link_to t('.back_link'), group_configs_path(index_params), class: "w-full sm:w-auto text-center rounded-xl px-4 py-2.5 bg-white text-slate-700 border border-slate-200 font-semibold hover:bg-slate-50" %>
-    </div>
+<div class="w-full max-w-5xl mx-auto space-y-6">
+  <div>
+    <p class="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600"><%= t('layout.group_configs') %></p>
+    <h1 class="page-title mt-2"><%= @group_config.group_name || @group_config.group_id %></h1>
+    <p class="page-subtitle">ID <%= @group_config.group_id %> · <%= t('.title', group: @group_config.group_name || @group_config.group_id) %></p>
   </div>
 
   <section class="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -86,4 +80,9 @@
       <% end %>
     </div>
   </section>
+
+  <div class="flex flex-col justify-end gap-2 sm:flex-row sm:gap-3">
+    <%= link_to t('.edit_link'), edit_group_config_path(@group_config), class: "w-full sm:w-auto text-center rounded-xl bg-blue-600 px-4 py-2.5 font-semibold text-white shadow-lg shadow-blue-500/20 hover:bg-blue-700" %>
+    <%= link_to t('.back_link'), group_configs_path(index_params), class: "w-full sm:w-auto text-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 font-semibold text-slate-700 hover:bg-slate-50" %>
+  </div>
 </div>

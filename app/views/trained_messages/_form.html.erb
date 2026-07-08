@@ -1,4 +1,4 @@
-<%= form_with(model: trained_message, class: "contents") do |form| %>
+<%= form_with(model: trained_message, class: "space-y-6") do |form| %>
   <% if trained_message.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
       <h2><%= t('.error_header', count: trained_message.errors.count) %></h2>
@@ -59,8 +59,8 @@
       <%= form.number_field :sender_chat_id, class: ["w-full rounded-lg border px-3 py-2", {"border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500": trained_message.errors[:sender_chat_id].none?, "border-red-400 focus:outline-red-600": trained_message.errors[:sender_chat_id].any?}] %>
     </div>
 
-    <div class="pt-2">
-      <%= form.submit class: "w-full sm:w-auto rounded-lg px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium cursor-pointer transition-colors duration-150" %>
+    <div class="flex justify-end border-t border-slate-100 pt-5">
+      <%= form.submit class: "w-full sm:w-auto rounded-xl px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold cursor-pointer transition-colors duration-150" %>
     </div>
   </div>
 <% end %>
