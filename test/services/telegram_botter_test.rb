@@ -141,6 +141,20 @@ class TelegramBotterTest < ActiveSupport::TestCase
     assert true, "Test passed because message was queued for async processing."
   end
 
+  def test_is_in_whitelist_uses_empty_channel_blacklist_by_default
+    message = OpenStruct.new(
+      text: "normal message",
+      chat: OpenStruct.new(id: 123, type: "group", title: "test group"),
+      from: OpenStruct.new(id: 999),
+      sender_chat: nil,
+      reply_to_message: nil
+    )
+
+    @botter.stub(:is_admin_of_group?, false) do
+      assert_equal false, @botter.send(:is_in_whitelist?, message)
+    end
+  end
+
   def test_handle_regular_message_reply_to_bot
     message = OpenStruct.new(
       text: "this is a reply to the bot",
@@ -357,16 +371,53 @@ class TelegramBotterTest < ActiveSupport::TestCase
       reply_to_message: nil # No replied message
     )
 
-    # The method should return early.
     @botter.stub(:is_group_chat?, true) do
       @botter.stub(:is_admin?, true) do
-        TelegramMemberFetcher.stub(:get_bot_chat_member, OpenStruct.new(status: "administrator")) do
-          @botter.send(:handle_markspam_command, @bot, message)
+        @botter.stub(:schedule_group_alert_cleanup, nil) do
+          api_mock = Minitest::Mock.new
+          api_mock.expect(:send_message, OpenStruct.new(chat: OpenStruct.new(id: 123), message_id: 200)) do |args|
+            args[:chat_id] == 123 && args[:text].include?("reply_required")
+          end
+          @bot.expect(:api, api_mock)
+
+          I18n.stub(:t, ->(key, **args) { key }) do
+            @botter.send(:handle_markspam_command, @bot, message)
+          end
+
+          assert api_mock.verify
         end
       end
     end
+  end
 
-    assert true
+  def test_execute_spam_training_marks_feedspam_as_spam
+    message = OpenStruct.new(
+      chat: OpenStruct.new(id: 123, type: "group", title: "Test Group"),
+      from: OpenStruct.new(id: 789, first_name: "Admin", last_name: "User")
+    )
+
+    TrainedMessage.stub(:create!, ->(attrs) {
+      assert_equal 123, attrs[:group_id]
+      assert_equal "spam sample", attrs[:message]
+      assert_equal :spam, attrs[:message_type]
+      assert_equal :feedspam_command, attrs[:source]
+      assert_equal :group_admin, attrs[:marked_by]
+      OpenStruct.new(id: 1)
+    }) do
+      @botter.stub(:schedule_group_alert_cleanup, nil) do
+        api_mock = Minitest::Mock.new
+        api_mock.expect(:send_message, OpenStruct.new(chat: OpenStruct.new(id: 123), message_id: 200)) do |args|
+          args[:chat_id] == 123 && args[:text].include?("spam sample")
+        end
+        @bot.expect(:api, api_mock)
+
+        I18n.stub(:t, ->(key, **args) { "#{key} #{args[:preview]}" }) do
+          @botter.send(:execute_spam_training, @bot, message, "spam sample")
+        end
+
+        assert api_mock.verify
+      end
+    end
   end
 
   def test_handle_markspam_command_with_empty_replied_message

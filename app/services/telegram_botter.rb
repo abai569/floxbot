@@ -303,7 +303,11 @@ class TelegramBotter
     Rails.logger.info "Handling markspam: #{message.to_h.to_json}"
     return unless is_group_chat?(bot, message)
     return unless is_admin?(bot, user: message.from, group_id: message.chat.id)
-    return if message.reply_to_message.nil?
+    if message.reply_to_message.nil?
+      sent_message = bot.api.send_message(chat_id: message.chat.id, text: I18n.t("telegram_bot.markspam.reply_required"))
+      schedule_group_alert_cleanup(sent_message, message.chat.id)
+      return
+    end
 
     group_id = message.chat.id
     chat_member = TelegramMemberFetcher.get_bot_chat_member(group_id)
@@ -475,7 +479,7 @@ class TelegramBotter
           message: spam_text,
           sender_chat_id: message.from.id,
           sender_user_name: user_name,
-          message_type: :maybe_spam,
+          message_type: :spam,
           source: :feedspam_command,
           marked_by: :group_admin
         )
@@ -1027,7 +1031,11 @@ class TelegramBotter
     return true if is_admin_of_group?(user: message.from, group_id: message.chat.id)
 
     # 2. Whitelist messages sent on behalf of a channel (channel broadcasts)
-    channel_broadcast_blacklist = Rails.application.config.channel_broadcast_blacklist
+    channel_broadcast_blacklist = if Rails.application.config.respond_to?(:channel_broadcast_blacklist)
+      Array(Rails.application.config.channel_broadcast_blacklist)
+    else
+      []
+    end
     if message.sender_chat.present? && !message.sender_chat.id.in?(channel_broadcast_blacklist)
       Rails.logger.info "Skipping inspection for channel message: #{message.to_h.to_json}"
       return true

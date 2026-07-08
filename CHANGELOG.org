@@ -1,6 +1,12 @@
 # Changelog
 
 This file summarizes the most important changes for each release.
+* Version 1.2.1 (2026-07-08)
+  - Fix /feedspam samples being saved as maybe_spam instead of spam, preventing them from training the classifier.
+  - Add a safe default for channel_broadcast_blacklist so spam analysis no longer crashes before enqueueing.
+  - Show a clear reply-required message when /markspam is used without replying to a spam message.
+  - Add regression tests for /feedspam training, /markspam usage feedback, and channel broadcast blacklist defaults.
+
 * Version 1.2.0 (2026-06-22)
   - Add per-group Bot language selector in the group configuration panel.
   - Localize new-member verification messages for button and math verification modes.
