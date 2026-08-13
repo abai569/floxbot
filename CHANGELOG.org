@@ -1,6 +1,10 @@
 # Changelog
 
 This file summarizes the most important changes for each release.
+* Version 1.2.9 (2026-07-08)
+  - Use flex layout for trained message filters so all 6 fields stay on one row.
+  - Translate search label to Chinese.
+
 * Version 1.2.8 (2026-07-08)
   - Force login card width with inline style to bypass Tailwind build cache.
 

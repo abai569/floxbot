@@ -22,15 +22,15 @@
   <!-- Filters -->
   <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
     <%= form_with url: trained_messages_path, method: :get, local: true, class: "space-y-4" do |form| %>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+      <div class="flex flex-wrap items-end gap-3">
         <!-- Search -->
-        <div class="lg:col-span-2">
-          <%= form.label :search, t('.search_label'), class: "block text-xs font-medium text-gray-600 mb-1" %>
+        <div class="w-56 flex-shrink-0">
+          <%= form.label :search, "搜索", class: "block text-xs font-medium text-gray-600 mb-1" %>
           <%= form.text_field :search, value: params[:search], placeholder: t('.search_placeholder'), class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3 text-sm" %>
         </div>
 
         <!-- Message Type Filter -->
-        <div>
+        <div class="flex-1 min-w-[120px]">
           <%= form.label :message_type, t('.message_type'), class: "block text-xs font-medium text-gray-600 mb-1" %>
           <%= form.select :message_type,
               options_for_select([[t('.all_types'), 'all']] + @message_types.map { |type| [type&.humanize || t('.unknown'), type] }, params[:message_type]),
@@ -39,7 +39,7 @@
         </div>
 
         <!-- Training Target Filter -->
-        <div>
+        <div class="flex-1 min-w-[120px]">
           <%= form.label :training_target, t('.training_target'), class: "block text-xs font-medium text-gray-600 mb-1" %>
           <%= form.select :training_target,
               options_for_select([[t('.all_targets'), 'all']] + @training_targets.map { |target| [target&.humanize || t('.unknown'), target] }, params[:training_target]),
@@ -48,7 +48,7 @@
         </div>
 
         <!-- Source Filter -->
-        <div>
+        <div class="flex-1 min-w-[120px]">
           <%= form.label :source, t('.source'), class: "block text-xs font-medium text-gray-600 mb-1" %>
           <%= form.select :source,
               options_for_select([[t('.all_sources'), 'all']] + @sources.map { |source| [source&.humanize || t('.unknown'), source] }, params[:source]),
@@ -57,7 +57,7 @@
         </div>
 
         <!-- Marked By Filter -->
-        <div>
+        <div class="flex-1 min-w-[120px]">
             <%= form.label :marked_by, t('.marked_by'), class: "block text-xs font-medium text-gray-600 mb-1" %>
             <%= form.select :marked_by,
               options_for_select([[t('.all_markers'), 'all'], [t('.options.group_admin'), 'group_admin'], [t('.options.admin_dashboard'), 'admin_dashboard'], [t('.options.auto_sync'), 'auto_sync'], [t('.options.not_marked_yet'), 'not_marked_yet']], params[:marked_by]),
@@ -66,7 +66,7 @@
         </div>
 
         <!-- Group Filter -->
-        <div>
+        <div class="flex-1 min-w-[120px]">
           <%= form.label :group_name, t('.group'), class: "block text-xs font-medium text-gray-600 mb-1" %>
           <%= form.select :group_name,
               options_for_select([[t('.all_groups'), 'all']] + @group_names.map { |name| [name, name] }, params[:group_name]),
