@@ -21,73 +21,74 @@
 
   <!-- Filters -->
   <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-    <%= form_with url: trained_messages_path, method: :get, local: true, class: "space-y-6" do |form| %>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-5">
+    <%= form_with url: trained_messages_path, method: :get, local: true, class: "space-y-4" do |form| %>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
         <!-- Search -->
         <div class="lg:col-span-2">
-          <%= form.label :search, t('.search_label'), class: "block text-sm font-medium text-gray-700 mb-1" %>
-          <%= form.text_field :search, value: params[:search], placeholder: t('.search_placeholder'), class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3" %>
+          <%= form.label :search, t('.search_label'), class: "block text-xs font-medium text-gray-600 mb-1" %>
+          <%= form.text_field :search, value: params[:search], placeholder: t('.search_placeholder'), class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3 text-sm" %>
         </div>
 
         <!-- Message Type Filter -->
         <div>
-          <%= form.label :message_type, t('.message_type'), class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.label :message_type, t('.message_type'), class: "block text-xs font-medium text-gray-600 mb-1" %>
           <%= form.select :message_type,
               options_for_select([[t('.all_types'), 'all']] + @message_types.map { |type| [type&.humanize || t('.unknown'), type] }, params[:message_type]),
               {},
-              { class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3" } %>
+              { class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3 text-sm" } %>
         </div>
 
         <!-- Training Target Filter -->
         <div>
-          <%= form.label :training_target, t('.training_target'), class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.label :training_target, t('.training_target'), class: "block text-xs font-medium text-gray-600 mb-1" %>
           <%= form.select :training_target,
               options_for_select([[t('.all_targets'), 'all']] + @training_targets.map { |target| [target&.humanize || t('.unknown'), target] }, params[:training_target]),
               {},
-              { class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3" } %>
+              { class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3 text-sm" } %>
         </div>
 
         <!-- Source Filter -->
         <div>
-          <%= form.label :source, t('.source'), class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.label :source, t('.source'), class: "block text-xs font-medium text-gray-600 mb-1" %>
           <%= form.select :source,
               options_for_select([[t('.all_sources'), 'all']] + @sources.map { |source| [source&.humanize || t('.unknown'), source] }, params[:source]),
               {},
-              { class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3" } %>
+              { class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3 text-sm" } %>
         </div>
 
         <!-- Marked By Filter -->
         <div>
-            <%= form.label :marked_by, t('.marked_by'), class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= form.label :marked_by, t('.marked_by'), class: "block text-xs font-medium text-gray-600 mb-1" %>
             <%= form.select :marked_by,
               options_for_select([[t('.all_markers'), 'all'], [t('.options.group_admin'), 'group_admin'], [t('.options.admin_dashboard'), 'admin_dashboard'], [t('.options.auto_sync'), 'auto_sync'], [t('.options.not_marked_yet'), 'not_marked_yet']], params[:marked_by]),
               {},
-              { class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3" } %>
+              { class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3 text-sm" } %>
         </div>
 
         <!-- Group Filter -->
         <div>
-          <%= form.label :group_name, t('.group'), class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.label :group_name, t('.group'), class: "block text-xs font-medium text-gray-600 mb-1" %>
           <%= form.select :group_name,
               options_for_select([[t('.all_groups'), 'all']] + @group_names.map { |name| [name, name] }, params[:group_name]),
               {},
-              { class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3" } %>
+              { class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3 text-sm" } %>
         </div>
       </div>
 
-      <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-3 sm:space-y-0">
-
-        <div class="flex-1">
-          <%= form.label :per_page, t('.per_page'), class: "block text-sm font-medium text-gray-700 mb-1" %>
-          <%= form.select :per_page,
-              options_for_select([[10, 10], [25, 25], [50, 50], [100, 100]], @per_page),
-              {},
-              { class: "rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3", onchange: "this.form.submit();" } %>
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-24">
+            <%= form.label :per_page, t('.per_page'), class: "block text-xs font-medium text-gray-600 mb-1" %>
+            <%= form.select :per_page,
+                options_for_select([[10, 10], [25, 25], [50, 50], [100, 100]], @per_page),
+                {},
+                { class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3 text-sm", onchange: "this.form.submit();" } %>
+          </div>
         </div>
 
-        <div class="flex items-center space-x-3 pt-4 sm:pt-0">
-          <%= form.button t('.apply_filters'), type: "submit", class: "rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 hover:bg-blue-700" %>
-          <%= link_to t('.clear_filters'), trained_messages_path, class: "rounded-lg px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition-colors duration-150" %>
+        <div class="flex items-center gap-3">
+          <%= form.button t('.apply_filters'), type: "submit", class: "rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 hover:bg-blue-700" %>
+          <%= link_to t('.clear_filters'), trained_messages_path, class: "rounded-lg px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium transition-colors duration-150" %>
         </div>
       </div>
 

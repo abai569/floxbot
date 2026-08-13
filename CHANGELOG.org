@@ -1,6 +1,10 @@
 # Changelog
 
 This file summarizes the most important changes for each release.
+* Version 1.2.7 (2026-07-08)
+  - Compact trained message filter row into a single line with smaller labels and tighter spacing.
+  - Narrow login page card for a cleaner centered look.
+
 * Version 1.2.6 (2026-07-08)
   - Fix classifier never deleting spam because maybe_ham samples were excluded from training.
   - Expand trainable scope to include maybe_spam and maybe_ham so the Bayesian classifier has ham data.
