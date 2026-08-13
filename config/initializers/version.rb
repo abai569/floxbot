@@ -1,4 +1,4 @@
 module TelegramSpamSniperBot
   # Check CHANGELOG.org for important changes for each release
-  VERSION = "1.2.7"
+  VERSION = "1.2.8"
 end

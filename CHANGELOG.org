@@ -1,6 +1,9 @@
 # Changelog
 
 This file summarizes the most important changes for each release.
+* Version 1.2.8 (2026-07-08)
+  - Force login card width with inline style to bypass Tailwind build cache.
+
 * Version 1.2.7 (2026-07-08)
   - Compact trained message filter row into a single line with smaller labels and tighter spacing.
   - Narrow login page card for a cleaner centered look.
