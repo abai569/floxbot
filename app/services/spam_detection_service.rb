@@ -79,12 +79,12 @@ class SpamDetectionService
 
   def handle_existing_message(existing_message)
     case existing_message.message_type
-    when "spam"
-      @is_confident = true
-      Rails.logger.info "Same message exists and already marked as spam: #{existing_message.message}, training target: #{existing_message.training_target}"
+    when "spam", "maybe_spam"
+      @is_confident = existing_message.message_type == "spam"
+      Rails.logger.info "Same message exists and already marked as #{existing_message.message_type}: #{existing_message.message}, training target: #{existing_message.training_target}"
       Shared::ClassificationResult.new(is_spam: true, target: existing_message.training_target, p_spam: 1)
-    when "ham"
-      Rails.logger.info "Same message exists and already marked as ham: #{existing_message.message}, training target: #{existing_message.training_target}"
+    when "ham", "maybe_ham"
+      Rails.logger.info "Same message exists and already marked as #{existing_message.message_type}: #{existing_message.message}, training target: #{existing_message.training_target}"
       non_spam_result
     when "untrained"
       # Signal that this is not a definitive result

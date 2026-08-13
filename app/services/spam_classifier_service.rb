@@ -45,14 +45,14 @@ class SpamClassifierService
 
     tokens = tokenize(trained_message.message)
 
-    if trained_message.spam?
+    if trained_message.spam? || trained_message.maybe_spam?
       @classifier_state.total_spam_messages += 1
       @classifier_state.total_spam_words += tokens.size
       tokens.each do |token|
         @classifier_state.spam_counts[token] = @classifier_state.spam_counts.fetch(token, 0) + 1
         @vocabulary.add(token)
       end
-    else # :ham - FALSE POSITIVE BIAS: count ham tokens double
+    else # :ham / :maybe_ham - FALSE POSITIVE BIAS: count ham tokens double
       # https://www.paulgraham.com/better.html
       @classifier_state.total_ham_messages += 1
       @classifier_state.total_ham_words += (tokens.size * 2) # Double

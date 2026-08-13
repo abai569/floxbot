@@ -15,7 +15,7 @@ class MessageTypeSyncJob < ApplicationJob
 
     # 2. Trigger Retraining and Ban Checks for all updated messages
     messages_to_sync.each do |message|
-      if message.spam? || message.ham?
+      if message.spam? || message.ham? || message.maybe_spam? || message.maybe_ham?
         BatchProcessor.add_to_batch(
           "classifier_training_batch_key",
           "ClassifierTrainerJob",

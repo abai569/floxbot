@@ -30,7 +30,7 @@ class TrainedMessage < ApplicationRecord
   GLOBAL_SHARED_MESSAGE = 0
 
   scope :shared, -> { where(group_id: GLOBAL_SHARED_MESSAGE) }
-  scope :trainable, -> { where(message_type: [ :spam, :ham ]) }
+  scope :trainable, -> { where(message_type: [ :spam, :ham, :maybe_spam, :maybe_ham ]) }
   scope :for_message_content, -> { where(training_target: :message_content) }
   scope :for_user_name, -> { where(training_target: :user_name) }
 
@@ -108,7 +108,7 @@ class TrainedMessage < ApplicationRecord
   private
 
   def trainable?
-    spam? || ham?
+    spam? || ham? || maybe_spam? || maybe_ham?
   end
 
   def trainable_type_changed?
@@ -123,7 +123,7 @@ class TrainedMessage < ApplicationRecord
   end
 
   def sync_message_type_by_hash
-    if spam? || ham?
+    if spam? || ham? || maybe_spam? || maybe_ham?
       MessageTypeSyncJob.perform_later(self.message_hash, self.message_type.to_sym)
     end
   end

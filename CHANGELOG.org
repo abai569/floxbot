@@ -1,6 +1,13 @@
 # Changelog
 
 This file summarizes the most important changes for each release.
+* Version 1.2.6 (2026-07-08)
+  - Fix classifier never deleting spam because maybe_ham samples were excluded from training.
+  - Expand trainable scope to include maybe_spam and maybe_ham so the Bayesian classifier has ham data.
+  - Treat maybe_spam as spam and maybe_ham as ham in train_only for correct class counting.
+  - Handle maybe_spam and maybe_ham in handle_existing_message hash cache lookups.
+  - Sync message_type_sync_job and controller to trigger retraining for maybe types.
+
 * Version 1.2.5 (2026-07-08)
   - Unify edit and new form action buttons into one bottom-right button group.
   - Move remaining trained message, banned user, and group classifier submit buttons out of the form card.
