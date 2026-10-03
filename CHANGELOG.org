@@ -1,6 +1,9 @@
 # Changelog
 
 This file summarizes the most important changes for each release.
+* Version 1.3.0 (2026-10-03)
+  - Lower the production spam probability threshold from 0.94 to 0.85 so high-confidence advertisements are deleted.
+
 * Version 1.2.9 (2026-07-08)
   - Use flex layout for trained message filters so all 6 fields stay on one row.
   - Translate search label to Chinese.
