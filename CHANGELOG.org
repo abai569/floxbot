@@ -1,6 +1,9 @@
 # Changelog
 
 This file summarizes the most important changes for each release.
+* Version 1.3.2 (2026-10-03)
+  - Fix Telegram command setup to read TELEGRAM_BOT_TOKEN from the Docker environment before Rails credentials.
+
 * Version 1.3.1 (2026-10-03)
   - Remove the redundant /markspam command and use /feedspam as the single moderation command.
   - Require /feedspam to reply to an advertisement, then mark it as spam, delete it, and ban the sender when permissions allow.

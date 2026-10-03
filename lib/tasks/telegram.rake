@@ -2,7 +2,7 @@ namespace :telegram do
   require "net/http"
   desc "Set commands for the Telegram bot"
   task setup_bot: :environment do
-    token = Rails.application.credentials.dig(:telegram_bot_token)
+    token = ENV["TELEGRAM_BOT_TOKEN"].presence || Rails.application.credentials.dig(:telegram_bot_token)
 
     unless token
       puts "Telegram token not found in credentials. Please run 'rails credentials:edit'."
