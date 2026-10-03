@@ -55,8 +55,7 @@ en:
       commands_title: "*Command List:*"
       commands:
         start: "/start - Start using the bot"
-        markspam: "/markspam - Delete spam messages and restrict users"
-        feedspam: "/feedspam - Submit spam samples for training" 
+        feedspam: "/feedspam - Reply to spam to mark, delete, and ban"
         listspam: "/listspam - View list of spam messages"
         listbanuser: "/listbanuser - List all banned users"
         setlang: "/setlang `<language_code>` - Set language for the bot"
@@ -69,18 +68,12 @@ en:
       general_error: "❌ An unexpected error occurred while setting the language."
     errors:
       processing: "An error occurred while processing your request."
-    markspam:
-      success_message: "✅ User @[%{banned_user_name}](tg://user?id=%{user_id}) has been banned and the message marked as spam."
-      delete_message_only_success_message: "✅ Message from user @[%{banned_user_name}](tg://user?id=%{user_id}) has been marked as spam."
-      insufficient_permission_to_delete_message: "❌ Insufficient permission to delete message."
-      reply_required: "❌ Please reply to a spam message before using /markspam."
-      failure_message: "❌ Failed to process the spam marking request."
     feedspam:
-      help_message: "Please provide the spam message text after the command. Examples: `/feedspam FREE IPHONE`"
-      success_message: "✅ Got it. I've learned from that spam message:\n\n`%{preview}`"
+      success_message: "✅ Spam marked, message deleted, and user @[%{banned_user_name}](tg://user?id=%{user_id}) banned.\n\n`%{preview}`"
+      delete_message_only_success_message: "✅ Spam marked and message deleted; the bot lacks permission to ban the user.\n\n`%{preview}`"
+      insufficient_permission_to_delete_message: "❌ The bot lacks permission to delete messages."
+      reply_required: "❌ Please reply to a spam message before using /feedspam."
       failure_message: "❌ Failed to process the spam training request."
-      reply_prompt: "/feedspam: Please reply to the this message with the spam you want to feed"
-      input_field_placeholder: "Please type the spam message you want to feed"
     unban:
       already_unbanned_message: "✅User already has been unbanned"
       success_message: "✅ User @[%{user_name}](tg://user?id=%{user_id}) has been unbanned and their messages marked as ham."

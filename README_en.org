@@ -30,15 +30,15 @@
    Therefore, this bot only offers the following three commands (supporting auto-completion with "/"):
 
    [[./doc/img/command_auto_completion.jpg]]
-*** =/markspam=
+*** =/feedspam=
     Delete spam messages and ban the user. Requires admin permissions.
-    Reply ="/markspam"= to the message you want to ban, and the bot will automatically delete that message and ban the user.
+    Reply ="/feedspam"= to the message you want to ban, and the bot will automatically delete that message and ban the user.
 
-    [[./doc/img/markspam_2.jpg]]
+    [[./doc/img/feedspam_2.jpg]]
 
     (Message has been deleted)
 
-    [[./doc/img/markspam.jpg]]
+    [[./doc/img/feedspam.jpg]]
 
     Unlike common group management bots, this command not only deletes the spam and bans the user, but also marks the message as spam with very high confidence. The system then uses this spam text as training data to update the model in real-time.
 
@@ -92,4 +92,4 @@
 *** If it's so powerful, why are some spam in my group still not being detected?
     The Bayesian algorithm is fundamentally a probability-based algorithm. If it hasn't encountered similar spam before, it cannot determine whether they are spam :(
 
-    All you need to do is use the =/markspam= command to delete the message and ban the user. This action helps train the bot, and all users of this bot will benefit from it.
+    All you need to do is use the =/feedspam= command to delete the message and ban the user. This action helps train the bot, and all users of this bot will benefit from it.

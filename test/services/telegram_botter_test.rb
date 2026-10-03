@@ -172,7 +172,7 @@ class TelegramBotterTest < ActiveSupport::TestCase
     assert true, "Test passed because SpamDetectionService.new was not called."
   end
 
-  def test_handle_markspam_command_success
+  def test_handle_feedspam_command_success
     # Mock message and replied message
     replied_message = OpenStruct.new(
       text: "spam message content",
@@ -213,7 +213,7 @@ class TelegramBotterTest < ActiveSupport::TestCase
                 # Stub I18n for predictable messages
                 I18n.stub(:t, ->(key, **args) { "#{key} #{args}" }) do
                   @botter.instance_variable_set(:@lang_code, "en")
-                  @botter.send(:handle_markspam_command, @bot, message)
+                  @botter.send(:handle_feedspam_command, @bot, message)
                 end
 
                 assert api_mock.verify
@@ -225,7 +225,7 @@ class TelegramBotterTest < ActiveSupport::TestCase
     end
   end
 
-  def test_handle_markspam_command_insufficient_permission_to_delete
+  def test_handle_feedspam_command_insufficient_permission_to_delete
     # Mock message and replied message
     replied_message = OpenStruct.new(
       text: "spam message content",
@@ -265,7 +265,7 @@ class TelegramBotterTest < ActiveSupport::TestCase
           # Stub I18n for predictable messages
           I18n.stub(:t, ->(key, **args) { "#{key} #{args}" }) do
             @botter.instance_variable_set(:@lang_code, "en")
-            @botter.send(:handle_markspam_command, @bot, message)
+            @botter.send(:handle_feedspam_command, @bot, message)
           end
 
           assert api_mock.verify
@@ -274,7 +274,7 @@ class TelegramBotterTest < ActiveSupport::TestCase
     end
   end
 
-  def test_handle_markspam_command_insufficient_permission_to_restrict
+  def test_handle_feedspam_command_insufficient_permission_to_restrict
     # Mock message and replied message
     replied_message = OpenStruct.new(
       text: "spam message content",
@@ -318,7 +318,7 @@ class TelegramBotterTest < ActiveSupport::TestCase
               # Stub I18n for predictable messages
               I18n.stub(:t, ->(key, **args) { "#{key} #{args}" }) do
                 @botter.instance_variable_set(:@lang_code, "en")
-                @botter.send(:handle_markspam_command, @bot, message)
+                @botter.send(:handle_feedspam_command, @bot, message)
               end
 
               assert api_mock.verify
@@ -329,7 +329,7 @@ class TelegramBotterTest < ActiveSupport::TestCase
     end
   end
 
-  def test_handle_markspam_command_not_in_group_chat
+  def test_handle_feedspam_command_not_in_group_chat
     message = OpenStruct.new(
       chat: OpenStruct.new(id: 123, type: "private"),
       from: OpenStruct.new(id: 789, first_name: "User")
@@ -338,7 +338,7 @@ class TelegramBotterTest < ActiveSupport::TestCase
     # is_group_chat? will return false, so the command should be ignored.
     # No API calls or other methods should be invoked.
     @botter.stub(:is_group_chat?, false) do
-      @botter.send(:handle_markspam_command, @bot, message)
+      @botter.send(:handle_feedspam_command, @bot, message)
     end
 
     # No assertions needed as the method should return early.
@@ -346,7 +346,7 @@ class TelegramBotterTest < ActiveSupport::TestCase
     assert true
   end
 
-  def test_handle_markspam_command_by_non_admin
+  def test_handle_feedspam_command_by_non_admin
     message = OpenStruct.new(
       chat: OpenStruct.new(id: 123, type: "group", title: "Test Group"),
       from: OpenStruct.new(id: 789, first_name: "User"),
@@ -357,14 +357,14 @@ class TelegramBotterTest < ActiveSupport::TestCase
     # No API calls or other methods should be invoked.
     @botter.stub(:is_group_chat?, true) do
       @botter.stub(:is_admin?, false) do
-        @botter.send(:handle_markspam_command, @bot, message)
+        @botter.send(:handle_feedspam_command, @bot, message)
       end
     end
 
     assert true
   end
 
-  def test_handle_markspam_command_without_replied_message
+  def test_handle_feedspam_command_without_replied_message
     message = OpenStruct.new(
       chat: OpenStruct.new(id: 123, type: "group", title: "Test Group"),
       from: OpenStruct.new(id: 789, first_name: "Admin", last_name: "User"),
@@ -381,7 +381,7 @@ class TelegramBotterTest < ActiveSupport::TestCase
           @bot.expect(:api, api_mock)
 
           I18n.stub(:t, ->(key, **args) { key }) do
-            @botter.send(:handle_markspam_command, @bot, message)
+            @botter.send(:handle_feedspam_command, @bot, message)
           end
 
           assert api_mock.verify
@@ -420,7 +420,48 @@ class TelegramBotterTest < ActiveSupport::TestCase
     end
   end
 
-  def test_handle_markspam_command_with_empty_replied_message
+  def test_feedspam_reply_trains_deletes_bans_and_records_user
+    replied_message = OpenStruct.new(
+      text: "spam message content",
+      message_id: 100,
+      from: OpenStruct.new(id: 456, first_name: "Spam", last_name: "User")
+    )
+    message = OpenStruct.new(
+      chat: OpenStruct.new(id: 123, type: "group", title: "Test Group"),
+      from: OpenStruct.new(id: 789, first_name: "Admin", last_name: "User"),
+      reply_to_message: replied_message
+    )
+    chat_member = OpenStruct.new(status: "administrator", can_delete_messages: true, can_restrict_members: true)
+
+    @botter.stub(:is_group_chat?, true) do
+      @botter.stub(:is_admin?, true) do
+        TelegramMemberFetcher.stub(:get_bot_chat_member, chat_member) do
+          TrainedMessage.stub(:create!, OpenStruct.new(id: 1)) do
+            BannedUser.stub(:find_or_create_by!, OpenStruct.new(id: 1)) do
+              @botter.stub(:schedule_group_alert_cleanup, nil) do
+                api_mock = Minitest::Mock.new
+                api_mock.expect(:delete_message, nil, chat_id: 123, message_id: 100)
+                api_mock.expect(:ban_chat_member, nil, chat_id: 123, user_id: 456)
+                api_mock.expect(:send_message, OpenStruct.new(chat: OpenStruct.new(id: 123), message_id: 200))
+                @bot.expect(:api, api_mock)
+                @bot.expect(:api, api_mock)
+                @bot.expect(:api, api_mock)
+
+                I18n.stub(:t, ->(key, **args) { "#{key} #{args}" }) do
+                  @botter.instance_variable_set(:@lang_code, "en")
+                  @botter.send(:handle_feedspam_command, @bot, message, "/feedspam")
+                end
+
+                assert api_mock.verify
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+
+  def test_handle_feedspam_command_with_empty_replied_message
     replied_message = OpenStruct.new(text: "", message_id: 100, from: OpenStruct.new(id: 456))
     message = OpenStruct.new(
       chat: OpenStruct.new(id: 123, type: "group", title: "Test Group"),
@@ -432,7 +473,7 @@ class TelegramBotterTest < ActiveSupport::TestCase
     @botter.stub(:is_group_chat?, true) do
       @botter.stub(:is_admin?, true) do
         TelegramMemberFetcher.stub(:get_bot_chat_member, OpenStruct.new(status: "administrator")) do
-          @botter.send(:handle_markspam_command, @bot, message)
+          @botter.send(:handle_feedspam_command, @bot, message)
         end
       end
     end

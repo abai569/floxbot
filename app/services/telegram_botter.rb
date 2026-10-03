@@ -171,7 +171,7 @@ class TelegramBotter
       end
     end
 
-    if message_text.match?(%r{^/(start|setverify|setlang|markspam|feedspam|listbanuser|listspam)})
+    if message_text.match?(%r{^/(start|setverify|setlang|feedspam|listbanuser|listspam)})
       schedule_command_cleanup(message)
     end
 
@@ -184,9 +184,6 @@ class TelegramBotter
     when %r{^/setlang}
       increment_command_counter("setlang")
       handle_set_language_command(bot, message)
-    when %r{^/markspam}
-      increment_command_counter("markspam")
-      handle_markspam_command(bot, message)
     when %r{^/feedspam}
       increment_command_counter("feedspam")
       handle_feedspam_command(bot, message, message_text)
@@ -299,89 +296,6 @@ class TelegramBotter
     schedule_group_alert_cleanup(sent_message, message.chat.id) if is_group_message?(message)
   end
 
-  def handle_markspam_command(bot, message)
-    Rails.logger.info "Handling markspam: #{message.to_h.to_json}"
-    return unless is_group_chat?(bot, message)
-    return unless is_admin?(bot, user: message.from, group_id: message.chat.id)
-    if message.reply_to_message.nil?
-      sent_message = bot.api.send_message(chat_id: message.chat.id, text: I18n.t("telegram_bot.markspam.reply_required"))
-      schedule_group_alert_cleanup(sent_message, message.chat.id)
-      return
-    end
-
-    group_id = message.chat.id
-    chat_member = TelegramMemberFetcher.get_bot_chat_member(group_id)
-    # return if bot is not admin
-    return unless [ "administrator", "creator" ].include?(chat_member.status) && message.reply_to_message
-
-    replied = message.reply_to_message
-    spam_text = extract_searchable_content(message.reply_to_message)
-    return if spam_text.nil? || spam_text.empty?
-
-    signals = extract_signals(message.reply_to_message)
-    if signals.any?
-      spam_text = spam_text + " " + signals.join(" ")
-    end
-
-    I18n.with_locale(@lang_code) do
-      begin
-        group_name = message.chat.title
-        actual_user = replied.try(:guest_bot_caller_user) || replied.from
-        user_name = [ actual_user&.first_name, actual_user&.last_name ].compact.join(" ")
-        # 1. Save the traineded message, which will invoke ActiveModel
-        # hook to train the model in the background job
-        trained_message = TrainedMessage.create!(
-          group_id: group_id,
-          message: spam_text,
-          group_name: group_name,
-          sender_chat_id: actual_user.id,
-          sender_user_name: user_name,
-          message_type: :spam,
-          marked_by: :group_admin
-        )
-        can_delete_messages = chat_member.can_delete_messages
-        can_restrict_members = chat_member.can_restrict_members
-
-        # 2. Delete the spam message
-        unless can_delete_messages
-          response_message = I18n.t("telegram_bot.markspam.insufficient_permission_to_delete_message")
-          sent_message = bot.api.send_message(chat_id: message.chat.id, text: response_message, parse_mode: "Markdown")
-          schedule_group_alert_cleanup(sent_message, message.chat.id)
-          return
-        end
-        bot.api.delete_message(chat_id: message.chat.id, message_id: replied.message_id)
-
-        # 3. Ban user and record the ban
-        banned_user_name = [ actual_user&.first_name, actual_user&.last_name ].compact.join(" ")
-        if can_restrict_members
-          bot.api.ban_chat_member(chat_id: message.chat.id, user_id: actual_user.id)
-          BannedUser.find_or_create_by!(
-            group_name: group_name,
-            group_id: message.chat.id,
-            sender_chat_id: actual_user.id,
-            sender_user_name: banned_user_name,
-            spam_message: spam_text
-          )
-        end
-
-        # 4. Confirm action
-        response_message = ""
-        if !can_restrict_members
-          response_message = I18n.t("telegram_bot.markspam.delete_message_only_success_message", banned_user_name: banned_user_name, user_id: actual_user.id)
-        else
-          response_message = I18n.t("telegram_bot.markspam.success_message", banned_user_name: banned_user_name, user_id: actual_user.id)
-        end
-
-        sent_message = bot.api.send_message(chat_id: message.chat.id, text: response_message, parse_mode: "Markdown")
-        schedule_group_alert_cleanup(sent_message, message.chat.id)
-      rescue => e
-        Rails.logger.error "Error in markspam command: #{e.message}"
-        sent_message = bot.api.send_message(chat_id: message.chat.id, text: I18n.t("telegram_bot.markspam.failure_message"))
-        schedule_group_alert_cleanup(sent_message, message.chat.id)
-      end
-    end
-  end
-
   def handle_forced_reply(bot, message)
     replied_to = message.reply_to_message
 
@@ -412,47 +326,17 @@ class TelegramBotter
 
   def handle_feedspam_command(bot, message, message_text)
     I18n.with_locale(@lang_code) do
-      # 1. Check if the command was used as a reply to another message
       replied_message = message.reply_to_message
+      return unless is_group_chat?(bot, message)
+      return unless is_admin?(bot, user: message.from, group_id: message.chat.id)
 
-      if replied_message && !replied_message.text.to_s.strip.empty?
-        Rails.logger.info "It's replied_message in feedspam"
-        # Use the text of the replied-to message for training
-        spam_text = replied_message.text
-
-        # Execute training logic
-        execute_spam_training(bot, message, spam_text)
-
-      else
-        Rails.logger.info "It's not replied_message in feedspam"
-        # 2. Check for text arguments directly after the command
-        # Extract everything after /feedspam command, preserving multiline content
-        spam_text_argument = message_text.sub(%r{^/feedspam\s*}, "").strip
-
-        Rails.logger.info "feedspam #{spam_text_argument}"
-        if spam_text_argument.empty?
-          # 3. No text and no reply found: Send a user-friendly prompt with force_reply
-          help_message = I18n.t("telegram_bot.feedspam.reply_prompt")
-
-          force_reply_markup = {
-            force_reply: true,
-            input_field_placeholder: I18n.t("telegram_bot.feedspam.input_field_placeholder"),
-            selective: true
-          }.to_json # Manual JSON conversion
-          sent_message = bot.api.send_message(
-            chat_id: message.chat.id,
-            text: help_message,
-            parse_mode: "Markdown",
-            reply_to_message_id: message.message_id, # Reply to the user's /feedspam command
-            reply_markup: force_reply_markup
-          )
-          schedule_group_alert_cleanup(sent_message, message.chat.id) if is_group_message?(message)
-          return
-        else
-          # Use the text provided as argument
-          execute_spam_training(bot, message, spam_text_argument)
-        end
+      if replied_message.nil? || extract_searchable_content(replied_message).to_s.strip.empty?
+        sent_message = bot.api.send_message(chat_id: message.chat.id, text: I18n.t("telegram_bot.feedspam.reply_required"))
+        schedule_group_alert_cleanup(sent_message, message.chat.id)
+        return
       end
+
+      execute_spam_training(bot, message, extract_searchable_content(replied_message))
     end
   end
 
@@ -462,13 +346,16 @@ class TelegramBotter
       Rails.logger.info "Spam message to train: #{spam_text}"
 
       begin
-        user_name = [ message.from&.first_name, message.from&.last_name ].compact.join(" ")
-        chat_type = message.chat.type
+        replied = message.reply_to_message
+        actual_user = replied.try(:guest_bot_caller_user) || replied.from
+        user_name = [ actual_user&.first_name, actual_user&.last_name ].compact.join(" ")
+        group_name = message.chat.title
+        chat_member = TelegramMemberFetcher.get_bot_chat_member(message.chat.id)
 
-        if chat_type == "private"
-          group_name = "Private: " + user_name
-        else
-          group_name = message.chat.title
+        unless chat_member&.can_delete_messages
+          sent_message = bot.api.send_message(chat_id: message.chat.id, text: I18n.t("telegram_bot.feedspam.insufficient_permission_to_delete_message"))
+          schedule_group_alert_cleanup(sent_message, message.chat.id)
+          return
         end
 
         # Save the trained message, which will invoke ActiveModel
@@ -477,16 +364,31 @@ class TelegramBotter
           group_id: message.chat.id,
           group_name: group_name,
           message: spam_text,
-          sender_chat_id: message.from.id,
+          sender_chat_id: actual_user.id,
           sender_user_name: user_name,
           message_type: :spam,
           source: :feedspam_command,
           marked_by: :group_admin
         )
 
+        bot.api.delete_message(chat_id: message.chat.id, message_id: replied.message_id)
+
+        if chat_member.can_restrict_members
+          bot.api.ban_chat_member(chat_id: message.chat.id, user_id: actual_user.id)
+          BannedUser.find_or_create_by!(
+            group_name: group_name,
+            group_id: message.chat.id,
+            sender_chat_id: actual_user.id,
+            sender_user_name: user_name,
+            spam_message: spam_text,
+            message_id: replied.message_id
+          )
+        end
+
         # Show a preview of what was learned (truncated if too long)
         preview = spam_text.length > 100 ? "#{escape_markdown(spam_text[0..100])}..." : escape_markdown(spam_text)
-        response_message = I18n.t("telegram_bot.feedspam.success_message", preview: preview)
+        response_key = chat_member.can_restrict_members ? "telegram_bot.feedspam.success_message" : "telegram_bot.feedspam.delete_message_only_success_message"
+        response_message = I18n.t(response_key, preview: preview, banned_user_name: user_name, user_id: actual_user.id)
         # Send a final confirmation message
         sent_message = bot.api.send_message(chat_id: message.chat.id, text: response_message, parse_mode: "Markdown")
         schedule_group_alert_cleanup(sent_message, message.chat.id) if is_group_message?(message)

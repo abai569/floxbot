@@ -1,6 +1,12 @@
 # Changelog
 
 This file summarizes the most important changes for each release.
+* Version 1.3.1 (2026-10-03)
+  - Remove the redundant /markspam command and use /feedspam as the single moderation command.
+  - Require /feedspam to reply to an advertisement, then mark it as spam, delete it, and ban the sender when permissions allow.
+  - Record the moderation action in trained messages and banned users, with explicit permission feedback.
+  - Update command help, task registration, README files, and installation documentation.
+
 * Version 1.3.0 (2026-10-03)
   - Lower the production spam probability threshold from 0.94 to 0.85 so high-confidence advertisements are deleted.
 
@@ -48,8 +54,8 @@ This file summarizes the most important changes for each release.
 * Version 1.2.1 (2026-07-08)
   - Fix /feedspam samples being saved as maybe_spam instead of spam, preventing them from training the classifier.
   - Add a safe default for channel_broadcast_blacklist so spam analysis no longer crashes before enqueueing.
-  - Show a clear reply-required message when /markspam is used without replying to a spam message.
-  - Add regression tests for /feedspam training, /markspam usage feedback, and channel broadcast blacklist defaults.
+  - Show a clear reply-required message when /feedspam is used without replying to a spam message.
+  - Add regression tests for /feedspam training and channel broadcast blacklist defaults.
 
 * Version 1.2.0 (2026-06-22)
   - Add per-group Bot language selector in the group configuration panel.

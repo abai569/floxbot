@@ -10,8 +10,7 @@ namespace :telegram do
 
     commands = [
       { command: "start", description: "欢迎页(Welcome message)" },
-      { command: "markspam", description: "删除垃圾消息并禁言(Delete the spam message and ban the sender)" },
-      { command: "feedspam", description: "投喂垃圾信息来训练(Feed spam message to train the bot)" },
+      { command: "feedspam", description: "标记、删除并封禁广告(Mark, delete, and ban spam)" },
       { command: "listspam", description: "查看广告列表(List all spams)" },
       { command: "listbanuser", description: "查看封禁账户列表(List all banned users)" },
       { command: "setlang", description: "设置机器人语言(Set language for bot)" }
