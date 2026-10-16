@@ -1023,9 +1023,10 @@ class TelegramBotter
     end
 
     if message&.external_reply.present?
-      if message.external_reply&.origin&.sender_user.present?
-        content_parts << message.external_reply.origin.sender_user.first_name
-        content_parts << message.external_reply.origin.sender_user.last_name
+      origin = message.external_reply.origin
+      if origin&.respond_to?(:sender_user) && origin.sender_user.present?
+        content_parts << origin.sender_user.first_name
+        content_parts << origin.sender_user.last_name
       end
 
       if message.external_reply&.chat.present?
